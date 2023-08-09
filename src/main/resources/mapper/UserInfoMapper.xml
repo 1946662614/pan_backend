@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easypan.mapper.UserInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.easypan.domain.UserInfo">
+            <id property="userId" column="user_id" jdbcType="VARCHAR"/>
+            <result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
+            <result property="email" column="email" jdbcType="VARCHAR"/>
+            <result property="qqOpenId" column="qq_open_id" jdbcType="VARCHAR"/>
+            <result property="qqAvatar" column="qq_avatar" jdbcType="VARCHAR"/>
+            <result property="password" column="password" jdbcType="VARCHAR"/>
+            <result property="joinTime" column="join_time" jdbcType="TIMESTAMP"/>
+            <result property="lastLoginTime" column="last_login_time" jdbcType="TIMESTAMP"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+            <result property="useSpace" column="use_space" jdbcType="BIGINT"/>
+            <result property="totalSpace" column="total_space" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        user_id,nick_name,email,
+        qq_open_id,qq_avatar,password,
+        join_time,last_login_time,status,
+        use_space,total_space
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user_info
+        where  user_id = #{userId,jdbcType=VARCHAR} 
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from user_info
+        where  user_id = #{userId,jdbcType=VARCHAR} 
+    </delete>
+    <insert id="insert" keyColumn="user_id" keyProperty="userId" parameterType="com.easypan.domain.UserInfo" useGeneratedKeys="true">
+        insert into user_info
+        ( user_id,nick_name,email
+        ,qq_open_id,qq_avatar,password
+        ,join_time,last_login_time,status
+        ,use_space,total_space)
+        values (#{userId,jdbcType=VARCHAR},#{nickName,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR}
+        ,#{qqOpenId,jdbcType=VARCHAR},#{qqAvatar,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR}
+        ,#{joinTime,jdbcType=TIMESTAMP},#{lastLoginTime,jdbcType=TIMESTAMP},#{status,jdbcType=TINYINT}
+        ,#{useSpace,jdbcType=BIGINT},#{totalSpace,jdbcType=BIGINT})
+    </insert>
+    <insert id="insertSelective" keyColumn="user_id" keyProperty="userId" parameterType="com.easypan.domain.UserInfo" useGeneratedKeys="true">
+        insert into user_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="userId != null">user_id,</if>
+                <if test="nickName != null">nick_name,</if>
+                <if test="email != null">email,</if>
+                <if test="qqOpenId != null">qq_open_id,</if>
+                <if test="qqAvatar != null">qq_avatar,</if>
+                <if test="password != null">password,</if>
+                <if test="joinTime != null">join_time,</if>
+                <if test="lastLoginTime != null">last_login_time,</if>
+                <if test="status != null">status,</if>
+                <if test="useSpace != null">use_space,</if>
+                <if test="totalSpace != null">total_space,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="userId != null">#{userId,jdbcType=VARCHAR},</if>
+                <if test="nickName != null">#{nickName,jdbcType=VARCHAR},</if>
+                <if test="email != null">#{email,jdbcType=VARCHAR},</if>
+                <if test="qqOpenId != null">#{qqOpenId,jdbcType=VARCHAR},</if>
+                <if test="qqAvatar != null">#{qqAvatar,jdbcType=VARCHAR},</if>
+                <if test="password != null">#{password,jdbcType=VARCHAR},</if>
+                <if test="joinTime != null">#{joinTime,jdbcType=TIMESTAMP},</if>
+                <if test="lastLoginTime != null">#{lastLoginTime,jdbcType=TIMESTAMP},</if>
+                <if test="status != null">#{status,jdbcType=TINYINT},</if>
+                <if test="useSpace != null">#{useSpace,jdbcType=BIGINT},</if>
+                <if test="totalSpace != null">#{totalSpace,jdbcType=BIGINT},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.easypan.domain.UserInfo">
+        update user_info
+        <set>
+                <if test="nickName != null">
+                    nick_name = #{nickName,jdbcType=VARCHAR},
+                </if>
+                <if test="email != null">
+                    email = #{email,jdbcType=VARCHAR},
+                </if>
+                <if test="qqOpenId != null">
+                    qq_open_id = #{qqOpenId,jdbcType=VARCHAR},
+                </if>
+                <if test="qqAvatar != null">
+                    qq_avatar = #{qqAvatar,jdbcType=VARCHAR},
+                </if>
+                <if test="password != null">
+                    password = #{password,jdbcType=VARCHAR},
+                </if>
+                <if test="joinTime != null">
+                    join_time = #{joinTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="lastLoginTime != null">
+                    last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="status != null">
+                    status = #{status,jdbcType=TINYINT},
+                </if>
+                <if test="useSpace != null">
+                    use_space = #{useSpace,jdbcType=BIGINT},
+                </if>
+                <if test="totalSpace != null">
+                    total_space = #{totalSpace,jdbcType=BIGINT},
+                </if>
+        </set>
+        where   user_id = #{userId,jdbcType=VARCHAR} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.easypan.domain.UserInfo">
+        update user_info
+        set 
+            nick_name =  #{nickName,jdbcType=VARCHAR},
+            email =  #{email,jdbcType=VARCHAR},
+            qq_open_id =  #{qqOpenId,jdbcType=VARCHAR},
+            qq_avatar =  #{qqAvatar,jdbcType=VARCHAR},
+            password =  #{password,jdbcType=VARCHAR},
+            join_time =  #{joinTime,jdbcType=TIMESTAMP},
+            last_login_time =  #{lastLoginTime,jdbcType=TIMESTAMP},
+            status =  #{status,jdbcType=TINYINT},
+            use_space =  #{useSpace,jdbcType=BIGINT},
+            total_space =  #{totalSpace,jdbcType=BIGINT}
+        where   user_id = #{userId,jdbcType=VARCHAR} 
+    </update>
+</mapper>
