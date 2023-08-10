@@ -1,5 +1,6 @@
 package com.easypan;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
 @SpringBootApplication(scanBasePackages = {"com.easypan"})
+@MapperScan(basePackages = "com.easypan.mappers")
 @EnableAsync // 异步调用
 @EnableTransactionManagement // 事务
 @EnableScheduling // 开启定时任务

@@ -1,4 +1,4 @@
-package com.easypan.mapper;
+package com.easypan.mappers;
 
 
 import com.easypan.domain.UserInfo;
