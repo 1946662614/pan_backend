@@ -1,65 +1,29 @@
 package com.easypan.mappers;
 
 
-import com.easypan.entity.po.UserInfo;
+import com.easypan.entity.po.EmailCode;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 /**
 * @author 嘻精
-* @description 针对表【user_info(用户信息)】的数据库操作Mapper
-* @createDate 2023-08-04 16:16:54
-* @Entity generator.domain.UserInfo
+* @description 针对表【email_code(邮箱验证码)】的数据库操作Mapper
+* @createDate 2023-08-10 15:56:55
+* @Entity generator.domain.EmailCode
 */
-public interface UserInfoMapper<T, P> extends BaseMapper<T, P> {
-    
-    /**
-     * 按主键删除
-     *
-     * @param id id
-     * @return int
-     */
+public interface EmailCodeMapper<T, P> extends BaseMapper<T, P> {
+
     int deleteByPrimaryKey(Long id);
-    
-    
-    /**
-     * 插入选择性
-     *
-     * @param record 记录
-     * @return int
-     */
-    int insertSelective(UserInfo record);
-    
-    /**
-     * 选择通过主键
-     *
-     * @param id id
-     * @return {@link UserInfo}
-     */
-    UserInfo selectByPrimaryKey(Long id);
-    
-    /**
-     * 更新主键选择性
-     *
-     * @param record 记录
-     * @return int
-     */
-    int updateByPrimaryKeySelective(UserInfo record);
-    
-    /**
-     * 更新主键
-     *
-     * @param record 记录
-     * @return int
-     */
-    int updateByPrimaryKey(UserInfo record);
-    
-    /**
-     * 根据邮箱查询
-     * @param email
-     * @return
-     */
-    UserInfo selectByEmail(String email);
+
+
+    int insertSelective(EmailCode record);
+
+    EmailCode selectByPrimaryKey(Long id);
+
+    int updateByPrimaryKeySelective(EmailCode record);
+
+    int updateByPrimaryKey(EmailCode record);
     
     /**
      * insert:(插入). <br/>
@@ -120,4 +84,12 @@ public interface UserInfoMapper<T, P> extends BaseMapper<T, P> {
     default Integer selectCount(P p) {
         return null;
     }
+    
+    /**
+     * 禁用邮件代码
+     *
+     * @param email 电子邮件
+     */
+
+    void disableEmailCode(@Param("email") String email);
 }

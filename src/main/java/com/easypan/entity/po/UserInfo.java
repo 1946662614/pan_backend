@@ -1,4 +1,4 @@
-package com.easypan.domain;
+package com.easypan.entity.po;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -6,7 +6,10 @@ import java.util.Date;
 
 /**
  * 用户信息
+ *
+ * @author 嘻精
  * @TableName user_info
+ * @date 2023/08/10
  */
 
 public class UserInfo implements Serializable {

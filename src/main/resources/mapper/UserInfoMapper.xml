@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.easypan.mapper.UserInfoMapper">
+<mapper namespace="com.easypan.mappers.UserInfoMapper">
 
-    <resultMap id="BaseResultMap" type="com.easypan.domain.UserInfo">
+    <resultMap id="BaseResultMap" type="com.easypan.entity.po.UserInfo">
             <id property="userId" column="user_id" jdbcType="VARCHAR"/>
             <result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
             <result property="email" column="email" jdbcType="VARCHAR"/>
@@ -31,12 +31,17 @@
         from user_info
         where  user_id = #{userId,jdbcType=VARCHAR} 
     </select>
+    <select id="selectByEmail" resultType="com.easypan.entity.po.UserInfo">
+        select <include refid="Base_Column_List" />
+            from user_info
+        where email = #{email,jdbcType=VARCHAR}
+    </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from user_info
         where  user_id = #{userId,jdbcType=VARCHAR} 
     </delete>
-    <insert id="insert" keyColumn="user_id" keyProperty="userId" parameterType="com.easypan.domain.UserInfo" useGeneratedKeys="true">
+    <insert id="insert" keyColumn="user_id" keyProperty="userId" parameterType="com.easypan.entity.po.UserInfo" useGeneratedKeys="true">
         insert into user_info
         ( user_id,nick_name,email
         ,qq_open_id,qq_avatar,password
@@ -47,7 +52,7 @@
         ,#{joinTime,jdbcType=TIMESTAMP},#{lastLoginTime,jdbcType=TIMESTAMP},#{status,jdbcType=TINYINT}
         ,#{useSpace,jdbcType=BIGINT},#{totalSpace,jdbcType=BIGINT})
     </insert>
-    <insert id="insertSelective" keyColumn="user_id" keyProperty="userId" parameterType="com.easypan.domain.UserInfo" useGeneratedKeys="true">
+    <insert id="insertSelective" keyColumn="user_id" keyProperty="userId" parameterType="com.easypan.entity.po.UserInfo" useGeneratedKeys="true">
         insert into user_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
                 <if test="userId != null">user_id,</if>
@@ -76,7 +81,7 @@
                 <if test="totalSpace != null">#{totalSpace,jdbcType=BIGINT},</if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.easypan.domain.UserInfo">
+    <update id="updateByPrimaryKeySelective" parameterType="com.easypan.entity.po.UserInfo">
         update user_info
         <set>
                 <if test="nickName != null">
@@ -112,7 +117,7 @@
         </set>
         where   user_id = #{userId,jdbcType=VARCHAR} 
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.easypan.domain.UserInfo">
+    <update id="updateByPrimaryKey" parameterType="com.easypan.entity.po.UserInfo">
         update user_info
         set 
             nick_name =  #{nickName,jdbcType=VARCHAR},
