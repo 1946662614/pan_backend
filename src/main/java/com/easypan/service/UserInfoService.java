@@ -1,5 +1,7 @@
 package com.easypan.service;
 
+import org.springframework.stereotype.Service;
+
 /**
  * @ClassName UserInfoService
  * @Description TODO

@@ -13,7 +13,6 @@ public class StringTools {
      * @param count 数
      * @return {@link String}
      */
-
     public static final String getRandomString(Integer count) {
         return RandomStringUtils.random(count, true, true);
     }
@@ -24,7 +23,6 @@ public class StringTools {
      * @param count 数
      * @return {@link String}
      */
-
     public static final String getRandomNumber(Integer count) {
         return RandomStringUtils.random(count, false, true);
     }

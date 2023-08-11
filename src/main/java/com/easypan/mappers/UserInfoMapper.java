@@ -1,123 +1,85 @@
 package com.easypan.mappers;
 
-
-import com.easypan.entity.po.UserInfo;
-
-import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
-* @author 嘻精
-* @description 针对表【user_info(用户信息)】的数据库操作Mapper
-* @createDate 2023-08-04 16:16:54
-* @Entity generator.domain.UserInfo
-*/
+ * 用户信息 数据库操作接口
+ */
+
 public interface UserInfoMapper<T, P> extends BaseMapper<T, P> {
-    
+
     /**
-     * 按主键删除
-     *
-     * @param id id
-     * @return int
+     * 根据UserId更新
      */
-    int deleteByPrimaryKey(Long id);
-    
-    
+    Integer updateByUserId(@Param("bean") T t, @Param("userId") String userId);
+
+
     /**
-     * 插入选择性
-     *
-     * @param record 记录
-     * @return int
+     * 根据UserId删除
      */
-    int insertSelective(UserInfo record);
-    
+    Integer deleteByUserId(@Param("userId") String userId);
+
+
     /**
-     * 选择通过主键
-     *
-     * @param id id
-     * @return {@link UserInfo}
+     * 根据UserId获取对象
      */
-    UserInfo selectByPrimaryKey(Long id);
-    
+    T selectByUserId(@Param("userId") String userId);
+
+
     /**
-     * 更新主键选择性
-     *
-     * @param record 记录
-     * @return int
+     * 根据Email更新
      */
-    int updateByPrimaryKeySelective(UserInfo record);
-    
+    Integer updateByEmail(@Param("bean") T t, @Param("email") String email);
+
+
     /**
-     * 更新主键
-     *
-     * @param record 记录
-     * @return int
+     * 根据Email删除
      */
-    int updateByPrimaryKey(UserInfo record);
-    
+    Integer deleteByEmail(@Param("email") String email);
+
+
     /**
-     * 根据邮箱查询
-     * @param email
-     * @return
+     * 根据Email获取对象
      */
-    UserInfo selectByEmail(String email);
-    
+    T selectByEmail(@Param("email") String email);
+
+
     /**
-     * insert:(插入). <br/>
-     *
-     * @param t
+     * 根据NickName更新
      */
-    @Override
-    default Integer insert(T t) {
-        return null;
-    }
-    
+    Integer updateByNickName(@Param("bean") T t, @Param("nickName") String nickName);
+
+
     /**
-     * insertOrUpdate:(插入或者更新). <br/>
-     *
-     * @param t
+     * 根据NickName删除
      */
-    @Override
-    default Integer insertOrUpdate(T t) {
-        return null;
-    }
-    
+    Integer deleteByNickName(@Param("nickName") String nickName);
+
+
     /**
-     * insertBatch:(批量插入). <br/>
-     *
-     * @param list
+     * 根据NickName获取对象
      */
-    @Override
-    default Integer insertBatch(List<T> list) {
-        return null;
-    }
-    
+    T selectByNickName(@Param("nickName") String nickName);
+
+
     /**
-     * insertOrUpdateBatch:(批量插入或更新). <br/>
-     *
-     * @param list
+     * 根据QqOpenId更新
      */
-    @Override
-    default Integer insertOrUpdateBatch(List<T> list) {
-        return null;
-    }
-    
+    Integer updateByQqOpenId(@Param("bean") T t, @Param("qqOpenId") String qqOpenId);
+
+
     /**
-     * selectList:(根据参数查询集合). <br/>
-     *
-     * @param p
+     * 根据QqOpenId删除
      */
-    @Override
-    default List<T> selectList(P p) {
-        return null;
-    }
-    
+    Integer deleteByQqOpenId(@Param("qqOpenId") String qqOpenId);
+
+
     /**
-     * selectCount:(根据集合查询数量). <br/>
-     *
-     * @param p
+     * 根据QqOpenId获取对象
      */
-    @Override
-    default Integer selectCount(P p) {
-        return null;
-    }
+    T selectByQqOpenId(@Param("qqOpenId") String qqOpenId);
+
+
+    Integer updateUserSpace(@Param("userId") String userId, @Param("useSpace") Long useSpace, @Param("totalSpace") Long totalSpace);
 }
