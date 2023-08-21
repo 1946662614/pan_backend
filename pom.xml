@@ -31,6 +31,7 @@
     <logback.version>1.2.10</logback.version>
     <mysql.version>8.0.23</mysql.version>
     <aspectjweaver.version>1.9.4</aspectjweaver.version>
+    <okhttp3.version>3.2.0</okhttp3.version>
     <fastjson.version>1.2.66</fastjson.version>
     <commons.lang3.version>3.4</commons.lang3.version>
     <commons.codec.version>1.9</commons.codec.version>
@@ -100,6 +101,14 @@
       <artifactId>aspectjweaver</artifactId>
       <version>${aspectjweaver.version}</version>
     </dependency>
+
+    <!--okhttp-->
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>${okhttp3.version}</version>
+    </dependency>
+
     <!--fastjson-->
     <dependency>
       <groupId>com.alibaba</groupId>
@@ -119,31 +128,20 @@
       <artifactId>commons-codec</artifactId>
       <version>${commons.codec.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.24</version>
+    </dependency>
 
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
       <version>${commons.io.version}</version>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>1.18.24</version>
-      <scope>provided</scope>
-    </dependency>
-
   </dependencies>
 
   <build>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <includes>
-          <include>mappers/*.xml</include>
-        </includes>
-      </resource>
-    </resources>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>

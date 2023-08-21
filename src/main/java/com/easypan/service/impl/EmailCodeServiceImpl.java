@@ -32,7 +32,7 @@ import java.util.Date;
  * @Date 2023/8/10 16:32
  * @Version 1.0
  */
-@Service("userInfoService")
+@Service
 public class EmailCodeServiceImpl implements EmailCodeService {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(EmailCodeServiceImpl.class);

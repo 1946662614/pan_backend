@@ -2,7 +2,6 @@ package com.easypan.component;
 
 import com.easypan.entity.constants.Constants;
 import com.easypan.entity.dto.SysSettingsDto;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -14,7 +13,6 @@ import javax.annotation.Resource;
  * @Date 2023/8/11 15:04
  * @Version 1.0
  */
-@Slf4j
 @Component("redisComponent")
 public class RedisComponent {
 	
