@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @ClassName RedisUtils
- * @Description TODO
+ * @Description Redis工具类
  * @Author Henry
  * @Date 2023/8/11 14:53
  * @Version 1.0
