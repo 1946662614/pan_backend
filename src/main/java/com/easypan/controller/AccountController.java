@@ -1,6 +1,7 @@
 package com.easypan.controller;
 
 import com.easypan.annotation.GlobalInterceptor;
+import com.easypan.annotation.VerifyParam;
 import com.easypan.entity.constants.Constants;
 import com.easypan.entity.dto.CreateImageCode;
 import com.easypan.entity.vo.ResponseVO;
@@ -66,8 +67,10 @@ public class AccountController extends ABaseController{
 	 * @return {@link ResponseVO}
 	 */
 	@RequestMapping("/sendEmailCode")
-	@GlobalInterceptor
-	public ResponseVO sendEmailCode(String email, HttpSession session, String checkCode, Integer type) {
+	@GlobalInterceptor(checkParams = true)
+	public ResponseVO sendEmailCode(@VerifyParam(required = true)String email,
+									@VerifyParam(required = true)HttpSession session, String checkCode,
+									@VerifyParam(required = true)Integer type) {
 		try {
 			if (!checkCode.equalsIgnoreCase((String) session.getAttribute(Constants.CHECK_CODE_KEY_EMAIL))) {
 				throw new BusinessException("图片验证码不正确");

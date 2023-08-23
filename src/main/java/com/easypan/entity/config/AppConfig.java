@@ -17,4 +17,6 @@ public class AppConfig {
 	@Value("${spring.mail.username:}")
 	private String sendUserName;
 	
+	@Value("${dev:false}")
+	private Boolean dev;
 }

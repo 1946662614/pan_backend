@@ -27,4 +27,18 @@ public class StringTools {
         return RandomStringUtils.random(count, false, true);
     }
     
+    /**
+     * String是否为空
+     *
+     * @param str
+     * @return boolean
+     */
+    public static boolean isEmpty(String str) {
+        if (str == null || "".equals(str) || "null".equals(str) || "\u0000".equals(str)) {
+            return true;
+        } else if ("".equals(str.trim())) {
+            return true;
+        }
+        return false;
+    }
 }
