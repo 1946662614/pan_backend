@@ -4,9 +4,12 @@ import com.easypan.annotation.GlobalInterceptor;
 import com.easypan.annotation.VerifyParam;
 import com.easypan.entity.constants.Constants;
 import com.easypan.entity.dto.CreateImageCode;
+import com.easypan.entity.dto.SessionWebUserDto;
+import com.easypan.entity.enums.VerifyRegexEnum;
 import com.easypan.entity.vo.ResponseVO;
 import com.easypan.exception.BusinessException;
 import com.easypan.service.EmailCodeService;
+import com.easypan.service.UserInfoService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,6 +17,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+
 
 /**
  * @ClassName AccountController
@@ -26,6 +30,8 @@ public class AccountController extends ABaseController{
 	@Resource
 	private EmailCodeService emailCodeService;
 	
+	@Resource
+	UserInfoService userInfoService;
 	/**
 	 * 校验码
 	 * 生成验证码图片并写入response输出流。
@@ -68,7 +74,7 @@ public class AccountController extends ABaseController{
 	 */
 	@RequestMapping("/sendEmailCode")
 	@GlobalInterceptor(checkParams = true)
-	public ResponseVO sendEmailCode(@VerifyParam(required = true)String email,
+	public ResponseVO sendEmailCode(@VerifyParam(required = true, regex = VerifyRegexEnum.EMAIL, max = 150)String email,
 									@VerifyParam(required = true)HttpSession session, String checkCode,
 									@VerifyParam(required = true)Integer type) {
 		try {
@@ -82,22 +88,61 @@ public class AccountController extends ABaseController{
 		}
 	}
 	
-
+	
+	/**
+	 * 注册
+	 *
+	 * @param email     电子邮件
+	 * @param nickName  昵称
+	 * @param passWord  通过单词
+	 * @param checkCode 校验码
+	 * @param emailCode 电子邮件代码
+	 * @return {@link ResponseVO}
+	 */
 	@RequestMapping("/register")
-	public ResponseVO register(String email, HttpSession session, String checkCode, Integer type) {
+	public ResponseVO register(@VerifyParam(required = true, regex = VerifyRegexEnum.EMAIL, max = 150)String email,
+							   @VerifyParam(required = true) String nickName,
+							   @VerifyParam(required = true, regex = VerifyRegexEnum.PASSWORD, min = 8,max = 18) String password,
+							   @VerifyParam(required = true) String checkCode,
+							   @VerifyParam(required = true) String emailCode,
+							   HttpSession session) {
 		try {
-			if (!checkCode.equalsIgnoreCase((String) session.getAttribute(Constants.CHECK_CODE_KEY_EMAIL))) {
+			if (!checkCode.equalsIgnoreCase((String) session.getAttribute(Constants.CHECK_CODE_KEY))) {
 				throw new BusinessException("图片验证码不正确");
 			}
-			emailCodeService.sendEmailCode(email, type);
+			userInfoService.register(email, nickName, password, emailCode);
 			return getSuccessResponseVO(null);
 		} finally {
-			session.removeAttribute(Constants.CHECK_CODE_KEY_EMAIL);
+			session.removeAttribute(Constants.CHECK_CODE_KEY);
 		}
 	}
- 
- 
 	
+	
+	/**
+	 * 登录
+	 *
+	 * @param email     电子邮件
+	 * @param password  密码
+	 * @param checkCode 校验码
+	 * @param session   会话
+	 * @return {@link ResponseVO}
+	 */
+	@RequestMapping("/login")
+	public ResponseVO login(@VerifyParam(required = true)String email,
+							   @VerifyParam(required = true) String password,
+							   @VerifyParam(required = true) String checkCode,
+							   HttpSession session) {
+		try {
+			if (!checkCode.equalsIgnoreCase((String) session.getAttribute(Constants.CHECK_CODE_KEY))) {
+				throw new BusinessException("图片验证码不正确");
+			}
+			SessionWebUserDto sessionWebUserDto = userInfoService.login(email, password);
+			session.setAttribute(Constants.SESSION_KEY,sessionWebUserDto);
+			return getSuccessResponseVO(sessionWebUserDto);
+		} finally {
+			session.removeAttribute(Constants.CHECK_CODE_KEY);
+		}
+	}
 
 
 

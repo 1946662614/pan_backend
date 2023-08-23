@@ -2,6 +2,7 @@ package com.easypan.mappers;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Result;
 
 /**
  * 邮箱验证码 数据库操作接口

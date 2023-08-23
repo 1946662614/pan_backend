@@ -27,7 +27,7 @@ import java.util.Date;
 
 /**
  * @ClassName EmailCodeServiceImpl
- * @Description TODO
+ * @Description
  * @Author Henry
  * @Date 2023/8/10 16:32
  * @Version 1.0
@@ -40,7 +40,7 @@ public class EmailCodeServiceImpl implements EmailCodeService {
 	@Resource
 	private UserInfoMapper<UserInfo, UserInfoQuery> userInfoMapper;
 	@Resource
-	private EmailCodeMapper<EmailCode, EmailCodeQuery> emailcodeMapper;
+	private EmailCodeMapper<EmailCode, EmailCodeQuery> emailCodeMapper;
 	
 	@Resource
 	private JavaMailSender javaMailSender;
@@ -70,15 +70,35 @@ public class EmailCodeServiceImpl implements EmailCodeService {
 		//  send email code
 		sendEmailCode(email, code);
 		// 将之前的验证码都置为无效
-		emailcodeMapper.disableEmailCode(email);
+		emailCodeMapper.disableEmailCode(email);
 		// 插入新数据
 		EmailCode emailCode = new EmailCode();
 		emailCode.setCode(code);
 		emailCode.setEmail(email);
 		emailCode.setStatus(Constants.ZERO);
-		emailCode.setCreateTime(new Date());
-		emailcodeMapper.insert(emailCode);
+		emailCode.setCreate_time(new Date());
+		emailCodeMapper.insert(emailCode);
 	}
+	
+	/**
+	 * 校验邮箱验证码
+	 *
+	 * @param email 电子邮件
+	 * @param code  代码
+	 */
+	@Override
+	public void checkCode(String email, String code) {
+		EmailCode emailCode = this.emailCodeMapper.selectByEmailAndCode(email, code);
+		if (emailCode == null) {
+			throw new BusinessException("邮箱验证码不正确");
+		}
+		if (emailCode.getStatus() == 1
+					|| System.currentTimeMillis() - emailCode.getCreate_time().getTime() > Constants.LENGTH_15 * 1000 * 60) {
+			throw new BusinessException("邮箱验证码已失效");
+		}
+		emailCodeMapper.disableEmailCode(email);
+	}
+	
 	private void sendEmailCode(String email, String code) {
 		try {
 			MimeMessage message = javaMailSender.createMimeMessage();

@@ -41,4 +41,14 @@ public class StringTools {
         }
         return false;
     }
+    
+    /**
+     * 通过md5编码加密
+     *
+     * @param originString 源字符串
+     * @return {@link String}
+     */
+    public static String encodeByMd5( String originString) {
+        return isEmpty(originString) ? null : DigestUtils.md5Hex(originString);
+    }
 }

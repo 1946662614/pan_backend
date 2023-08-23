@@ -1,7 +1,5 @@
 package com.easypan.entity.po;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;

@@ -11,11 +11,15 @@ import java.lang.annotation.*;
 public @interface GlobalInterceptor {
 	
 	/**
-	 * 校验参数
+	 * 是否要校验参数
 	 *
 	 * @return boolean
 	 */
 	boolean checkParams() default false;
 	
-	
+	/**
+	 * 是否需要登录
+	 * @return
+	 */
+	boolean checkLogin() default false;
 }

@@ -2,9 +2,6 @@ package com.easypan.aspect;
 
 import com.easypan.annotation.GlobalInterceptor;
 import com.easypan.annotation.VerifyParam;
-import com.easypan.entity.config.AppConfig;
-import com.easypan.entity.constants.Constants;
-import com.easypan.entity.dto.SessionWebUserDto;
 import com.easypan.entity.enums.ResponseCodeEnum;
 import com.easypan.entity.po.UserInfo;
 import com.easypan.exception.BusinessException;
@@ -34,6 +31,13 @@ import java.lang.reflect.Parameter;
 import java.util.List;
 import java.util.function.ObjLongConsumer;
 
+/**
+ * 全局操作切面
+ *
+ * @author 嘻精
+ * @date 2023/08/23
+ */
+
 @Aspect
 @Component("globalOperationAspect")
 @Slf4j
@@ -46,6 +50,7 @@ public class GlobalOperationAspect {
 	// 定义切点
 	/**
 	 * 请求拦截
+	 * 加了@GlobalInterceptor 注解的拦截
 	 */
 	@Pointcut("@annotation(com.easypan.annotation.GlobalInterceptor)")
 	private void requestInterceptor() {

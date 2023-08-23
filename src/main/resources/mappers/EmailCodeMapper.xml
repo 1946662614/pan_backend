@@ -18,8 +18,7 @@
 
     <!-- 通用查询结果列-->
     <sql id="base_column_list">
-        email
-        ,code,create_time,status
+        email,code,create_time,status
     </sql>
 
     <sql id="base_condition_filed">

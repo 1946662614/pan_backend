@@ -23,7 +23,7 @@ public class EmailCode implements Serializable {
     /**
      * 创建时间
      */
-    private Date createTime;
+    private Date create_time;
 
     /**
      * 0: 未使用 1: 已使用
@@ -46,7 +46,7 @@ public class EmailCode implements Serializable {
         EmailCode other = (EmailCode) that;
         return (this.getEmail() == null ? other.getEmail() == null : this.getEmail().equals(other.getEmail()))
             && (this.getCode() == null ? other.getCode() == null : this.getCode().equals(other.getCode()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
+            && (this.getCreate_time() == null ? other.getCreate_time() == null : this.getCreate_time().equals(other.getCreate_time()))
             && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()));
     }
 
@@ -56,7 +56,7 @@ public class EmailCode implements Serializable {
         int result = 1;
         result = prime * result + ((getEmail() == null) ? 0 : getEmail().hashCode());
         result = prime * result + ((getCode() == null) ? 0 : getCode().hashCode());
-        result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
+        result = prime * result + ((getCreate_time() == null) ? 0 : getCreate_time().hashCode());
         result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
         return result;
     }
@@ -69,7 +69,7 @@ public class EmailCode implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", email=").append(email);
         sb.append(", code=").append(code);
-        sb.append(", create_time=").append(createTime);
+        sb.append(", create_time=").append(create_time);
         sb.append(", status=").append(status);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

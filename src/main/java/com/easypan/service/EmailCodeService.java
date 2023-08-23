@@ -18,4 +18,11 @@ public interface EmailCodeService {
 	 */
 	void sendEmailCode(String toEmail, Integer type);
 	
+	/**
+	 * 校验邮箱验证码
+	 *
+	 * @param email 电子邮件
+	 * @param code  代码
+	 */
+	void checkCode(String email, String code);
 }
