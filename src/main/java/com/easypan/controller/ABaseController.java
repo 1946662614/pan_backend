@@ -10,7 +10,6 @@ import com.easypan.utils.StringTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
@@ -25,13 +24,13 @@ public class ABaseController {
 
     private static final Logger logger = LoggerFactory.getLogger(ABaseController.class);
 
-    protected static final String STATUC_SUCCESS = "success";
+    protected static final String STATUS_SUCCESS = "success";
 
-    protected static final String STATUC_ERROR = "error";
+    protected static final String STATUS_ERROR = "error";
 
     protected <T> ResponseVO getSuccessResponseVO(T t) {
         ResponseVO<T> responseVO = new ResponseVO<>();
-        responseVO.setStatus(STATUC_SUCCESS);
+        responseVO.setStatus(STATUS_SUCCESS);
         responseVO.setCode(ResponseCodeEnum.CODE_200.getCode());
         responseVO.setInfo(ResponseCodeEnum.CODE_200.getMsg());
         responseVO.setData(t);
@@ -90,7 +89,7 @@ public class ABaseController {
     }
     
     protected SessionWebUserDto getUserInfoSession(HttpSession session) {
-        SessionWebUserDto sessionWebUserDto= (SessionWebUserDto) session.getAttribute(SESSION_KEY);
+        SessionWebUserDto sessionWebUserDto= (SessionWebUserDto) session.getAttribute(Constants.SESSION_KEY);
         return sessionWebUserDto;
     }
 }

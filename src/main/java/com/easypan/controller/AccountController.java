@@ -219,6 +219,7 @@ public class AccountController extends ABaseController{
 				if (!new File(appConfig.getProjectFolder() + avatarFolderName + AVATAR_DEFAULT).exists()) {
 					// 没有则返回提示
 					printNoDefaultImage(response);
+					return;
 				}
 				// 有则读取默认头像
 				avatarPath = appConfig.getProjectFolder() + avatarFolderName + AVATAR_DEFAULT;

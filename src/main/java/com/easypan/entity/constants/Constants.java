@@ -14,8 +14,8 @@ public class Constants {
 	public static final Long REDIS_KEY_EXPIRES_DAY = REDIS_KEY_EXPIRES_ONE_MIN * 60 * 24L;
 	public static final String 	REDIS_KEY_SYS_SETTING = "easypan:syssetting";
 	public static final String 	REDIS_KEY_USER_SPACE_USE = "easypan:user:spaceuse";
-	public static final String FILE_FOLDER_FILE = "/file/";
-	public static final String FILE_FOLDER_AVATAR_NAME = "/avatar";
+	public static final String FILE_FOLDER_FILE = "file\\";
+	public static final String FILE_FOLDER_AVATAR_NAME = "avatar\\";
 	
 	public static final String AVATAR_SUFFIX = ".jpg";
 	public static final String AVATAR_DEFAULT = "default.jpg";

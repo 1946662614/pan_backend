@@ -108,7 +108,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 		
 		SessionWebUserDto sessionWebUserDto = new SessionWebUserDto();
 		sessionWebUserDto.setNickName(userInfo.getNickName());
-		sessionWebUserDto.setUserId(updateInfo.getUserId());
+		sessionWebUserDto.setUserId(userInfo.getUserId());
 		if (ArrayUtils.contains(appConfig.getAdminEmails().split(","),email)) {
 			sessionWebUserDto.setAdmin(true);
 		} else {
@@ -120,7 +120,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 		// userSpaceDto.setUserSpace();
 		userSpaceDto.setTotalSpace(userSpaceDto.getTotalSpace());
 		redisComponent.saveUserSpaceUse(userInfo.getUserId(),userSpaceDto);
-		return null;
+		return sessionWebUserDto;
 	}
 	
 	@Override
