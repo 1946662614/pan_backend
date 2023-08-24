@@ -94,7 +94,7 @@ public class AccountController extends ABaseController{
 	 *
 	 * @param email     电子邮件
 	 * @param nickName  昵称
-	 * @param passWord  通过单词
+	 * @param password  通过单词
 	 * @param checkCode 校验码
 	 * @param emailCode 电子邮件代码
 	 * @return {@link ResponseVO}
@@ -139,6 +139,32 @@ public class AccountController extends ABaseController{
 			SessionWebUserDto sessionWebUserDto = userInfoService.login(email, password);
 			session.setAttribute(Constants.SESSION_KEY,sessionWebUserDto);
 			return getSuccessResponseVO(sessionWebUserDto);
+		} finally {
+			session.removeAttribute(Constants.CHECK_CODE_KEY);
+		}
+	}
+	
+	/**
+	 * 注册
+	 * @param email
+	 * @param password
+	 * @param checkCode
+	 * @param emailCode
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/resetPwd")
+	public ResponseVO resetPwd(@VerifyParam(required = true, regex = VerifyRegexEnum.EMAIL, max = 150)String email,
+							   @VerifyParam(required = true, regex = VerifyRegexEnum.PASSWORD, min = 8,max = 18) String password,
+							   @VerifyParam(required = true) String checkCode,
+							   @VerifyParam(required = true) String emailCode,
+							   HttpSession session) {
+		try {
+			if (!checkCode.equalsIgnoreCase((String) session.getAttribute(Constants.CHECK_CODE_KEY))) {
+				throw new BusinessException("图片验证码不正确");
+			}
+			userInfoService.resetPwd(email,emailCode,password);
+			return getSuccessResponseVO(null);
 		} finally {
 			session.removeAttribute(Constants.CHECK_CODE_KEY);
 		}
