@@ -2,6 +2,7 @@ package com.easypan.entity.config;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,4 +23,8 @@ public class AppConfig {
 	
 	@Value("${dev:false}")
 	private Boolean dev;
+	
+	@Value("${project.folder}")
+	private String projectFolder;
+	
 }

@@ -9,7 +9,7 @@ import javax.annotation.Resource;
 
 /**
  * @ClassName RedisComponent
- * @Description TODO
+ * @Description
  * @Author Henry
  * @Date 2023/8/11 15:04
  * @Version 1.0
@@ -29,7 +29,31 @@ public class RedisComponent {
 		return sysSettingsDto;
 	}
 	
+	/**
+	 * 保存用户使用空间
+	 *
+	 * @param userId       用户id
+	 * @param userSpaceDto 用户空间dto
+	 */
 	public void saveUserSpaceUse(String userId, UserSpaceDto userSpaceDto) {
 		redisUtils.setex(Constants.REDIS_KEY_USER_SPACE_USE + userId, userSpaceDto,Constants.REDIS_KEY_EXPIRES_DAY);
+	}
+	
+	/**
+	 * 获取用户使用空间
+	 *
+	 * @param userId 用户id
+	 * @return {@link UserSpaceDto}
+	 */
+	public UserSpaceDto getUserSpaceUse(String userId) {
+		UserSpaceDto userSpaceDto = (UserSpaceDto) redisUtils.get(Constants.REDIS_KEY_USER_SPACE_USE + userId);
+		if (userSpaceDto == null) {
+			userSpaceDto = new UserSpaceDto();
+			// todo 查询当前用户已经上传穿文件大小总和
+			userSpaceDto.setUserSpace(0L);
+			userSpaceDto.setTotalSpace(getSysSettings().getUserInitUseSpace() * Constants.MB);
+			saveUserSpaceUse(userId, userSpaceDto);
+		}
+		return userSpaceDto;
 	}
 }

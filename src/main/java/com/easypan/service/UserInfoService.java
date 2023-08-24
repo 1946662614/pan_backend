@@ -1,6 +1,7 @@
 package com.easypan.service;
 
 import com.easypan.entity.dto.SessionWebUserDto;
+import com.easypan.entity.po.UserInfo;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,6 +12,11 @@ import org.springframework.stereotype.Service;
  */
 @Service("userInfoService")
 public interface UserInfoService {
+	
+	/**
+	 * 根据UserId修改
+	 */
+	Integer updateUserInfoByUserId(UserInfo bean, String userId);
 	
 	void register(String email, String nickName, String password, String emailCode);
 	

@@ -44,6 +44,18 @@ public class UserInfoServiceImpl implements UserInfoService {
 	
 	@Resource
 	private AppConfig appConfig;
+	
+	/**
+	 * 根据UserId修改
+	 *
+	 * @param bean
+	 * @param userId
+	 */
+	@Override
+	public Integer updateUserInfoByUserId(UserInfo bean, String userId) {
+		return this.userInfoMapper.updateByUserId(bean, userId);
+	}
+	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void register(String email, String nickName, String password, String emailCode) {
@@ -104,7 +116,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 		}
 		// 用户空间
 		UserSpaceDto userSpaceDto = new UserSpaceDto();
-		// TODO
+		// TODO 查询当前用户已经上传穿文件大小总和
 		// userSpaceDto.setUserSpace();
 		userSpaceDto.setTotalSpace(userSpaceDto.getTotalSpace());
 		redisComponent.saveUserSpaceUse(userInfo.getUserId(),userSpaceDto);

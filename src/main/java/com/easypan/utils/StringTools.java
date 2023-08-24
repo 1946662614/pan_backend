@@ -51,4 +51,14 @@ public class StringTools {
     public static String encodeByMd5( String originString) {
         return isEmpty(originString) ? null : DigestUtils.md5Hex(originString);
     }
+	
+	public static boolean pathIsOk(String filePath) {
+        if (isEmpty(filePath)) {
+            return false;
+        }
+        if (filePath.contains("../") ||  filePath.contains("..\\")) {
+            return false;
+        }
+        return true;
+	}
 }
