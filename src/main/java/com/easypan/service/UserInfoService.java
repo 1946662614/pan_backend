@@ -23,4 +23,6 @@ public interface UserInfoService {
 	SessionWebUserDto login(String email, String password);
 	
 	void resetPwd(String email, String emailCode, String password);
+	
+	SessionWebUserDto qqLogin(String code);
 }

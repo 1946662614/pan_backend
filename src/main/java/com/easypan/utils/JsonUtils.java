@@ -22,7 +22,5 @@ public class JsonUtils {
     public static <T> List<T> convertJsonArray2List(String json, Class<T> classz) {
         return JSONArray.parseArray(json, classz);
     }
-
-    public static void main(String[] args) {
-    }
+    
 }
