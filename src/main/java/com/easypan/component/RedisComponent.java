@@ -36,7 +36,7 @@ public class RedisComponent {
 	 * @param userSpaceDto 用户空间dto
 	 */
 	public void saveUserSpaceUse(String userId, UserSpaceDto userSpaceDto) {
-		redisUtils.setex(Constants.REDIS_KEY_USER_SPACE_USE + userId, userSpaceDto,Constants.REDIS_KEY_EXPIRES_DAY);
+		redisUtils.setex(Constants.REDIS_KEY_USER_SPACE_USE + userId, userSpaceDto, Constants.REDIS_KEY_EXPIRES_DAY);
 	}
 	
 	/**
@@ -50,7 +50,7 @@ public class RedisComponent {
 		if (userSpaceDto == null) {
 			userSpaceDto = new UserSpaceDto();
 			// todo 查询当前用户已经上传文件大小总和
-			userSpaceDto.setUserSpace(0L);
+			userSpaceDto.setUseSpace(0L);
 			userSpaceDto.setTotalSpace(getSysSettings().getUserInitUseSpace() * Constants.MB);
 			saveUserSpaceUse(userId, userSpaceDto);
 		}
