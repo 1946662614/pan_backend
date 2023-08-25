@@ -91,7 +91,7 @@
             <if test="bean.code != null">
                 code,
             </if>
-            <if test="bean.createTime != null">
+            <if test="bean.create_time != null">
                 create_time,
             </if>
             <if test="bean.status != null">
@@ -105,8 +105,8 @@
             <if test="bean.code!=null">
                 #{bean.code},
             </if>
-            <if test="bean.createTime!=null">
-                #{bean.createTime},
+            <if test="bean.create_time!=null">
+                #{bean.create_time},
             </if>
             <if test="bean.status!=null">
                 #{bean.status},

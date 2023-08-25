@@ -2,6 +2,8 @@ package com.easypan.aspect;
 
 import com.easypan.annotation.GlobalInterceptor;
 import com.easypan.annotation.VerifyParam;
+import com.easypan.entity.constants.Constants;
+import com.easypan.entity.dto.SessionWebUserDto;
 import com.easypan.entity.enums.ResponseCodeEnum;
 import com.easypan.entity.po.UserInfo;
 import com.easypan.exception.BusinessException;
@@ -76,8 +78,11 @@ public class GlobalOperationAspect {
 				return;
 			}
 			/**
-			 * TODO 校验登录
+			 *  校验登录
 			 */
+			if (interceptor.checkLogin() || interceptor.checkAdmin()) {
+				checkLogin(interceptor.checkAdmin());
+			}
 			
 			/**
 			 * 校验参数
@@ -93,6 +98,20 @@ public class GlobalOperationAspect {
 		} catch (Throwable e) {
 			log.error("全局拦截器异常", e);
 			throw new BusinessException(ResponseCodeEnum.CODE_500);
+		}
+	}
+	
+	private void checkLogin(Boolean checkAdmin) {
+		// 获取session
+		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		HttpSession session = request.getSession();
+		SessionWebUserDto userDto = (SessionWebUserDto) session.getAttribute(Constants.SESSION_KEY);
+		if (null == userDto) {
+			throw new BusinessException(ResponseCodeEnum.CODE_901);
+		}
+		// 校验是否管理员
+		if (checkAdmin && !userDto.getAdmin()) {
+			throw new BusinessException(ResponseCodeEnum.CODE_404);
 		}
 	}
 	

@@ -22,4 +22,11 @@ public @interface GlobalInterceptor {
 	 * @return
 	 */
 	boolean checkLogin() default false;
+	
+	/**
+	 * 校验超级管理员
+	 *
+	 * @return boolean
+	 */
+	boolean checkAdmin() default false;
 }

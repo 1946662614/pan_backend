@@ -96,7 +96,7 @@ public class AccountController extends ABaseController{
 	 * @return {@link ResponseVO}
 	 */
 	@RequestMapping("/sendEmailCode")
-	@GlobalInterceptor(checkParams = true)
+	@GlobalInterceptor(checkParams = true, checkLogin = false)
 	public ResponseVO sendEmailCode(@VerifyParam(required = true, regex = VerifyRegexEnum.EMAIL, max = 150)String email,
 									@VerifyParam(required = true)HttpSession session, String checkCode,
 									@VerifyParam(required = true)Integer type) {
@@ -123,7 +123,7 @@ public class AccountController extends ABaseController{
 	 * @return {@link ResponseVO}
 	 */
 	@RequestMapping("/register")
-	@GlobalInterceptor(checkParams = true)
+	@GlobalInterceptor(checkParams = true, checkLogin = false)
 	public ResponseVO register(@VerifyParam(required = true, regex = VerifyRegexEnum.EMAIL, max = 150)String email,
 							   @VerifyParam(required = true) String nickName,
 							   @VerifyParam(required = true, regex = VerifyRegexEnum.PASSWORD, min = 8,max = 18) String password,
@@ -152,7 +152,7 @@ public class AccountController extends ABaseController{
 	 * @return {@link ResponseVO}
 	 */
 	@RequestMapping("/login")
-	@GlobalInterceptor(checkParams = true)
+	@GlobalInterceptor(checkParams = true, checkLogin = false)
 	public ResponseVO login(@VerifyParam(required = true)String email,
 							   @VerifyParam(required = true) String password,
 							   @VerifyParam(required = true) String checkCode,
@@ -179,7 +179,7 @@ public class AccountController extends ABaseController{
 	 * @return
 	 */
 	@RequestMapping("/resetPwd")
-	@GlobalInterceptor(checkParams = true)
+	@GlobalInterceptor(checkParams = true, checkLogin = false)
 	public ResponseVO resetPwd(@VerifyParam(required = true, regex = VerifyRegexEnum.EMAIL, max = 150)String email,
 							   @VerifyParam(required = true, regex = VerifyRegexEnum.PASSWORD, min = 8,max = 18) String password,
 							   @VerifyParam(required = true) String checkCode,
@@ -202,7 +202,7 @@ public class AccountController extends ABaseController{
 	 * @param userId
 	 */
 	@RequestMapping("/getAvatar/{userId}")
-	@GlobalInterceptor(checkParams = true)
+	@GlobalInterceptor(checkParams = true, checkLogin = false)
 	public void getAvatar(HttpServletResponse response, @VerifyParam(required = true)@PathVariable("userId")String userId) {
 		
 			String avatarFolderName = Constants.FILE_FOLDER_FILE + Constants.FILE_FOLDER_AVATAR_NAME;
@@ -279,7 +279,6 @@ public class AccountController extends ABaseController{
 	 * @return {@link ResponseVO}
 	 */
 	@RequestMapping("/logout")
-	@GlobalInterceptor
 	public ResponseVO logout(HttpSession session) {
 		session.invalidate();
 		return getSuccessResponseVO(null);

@@ -13,10 +13,10 @@ public interface EmailCodeService {
 	/**
 	 * 发送电子邮件编码
 	 *
-	 * @param toEmail 电子邮件
+	 * @param email 电子邮件
 	 * @param type    类型
 	 */
-	void sendEmailCode(String toEmail, Integer type);
+	void sendEmailCode(String email, Integer type);
 	
 	/**
 	 * 校验邮箱验证码
