@@ -42,7 +42,13 @@ public interface FileInfoMapper<T, P> extends BaseMapper<T, P> {
                       @Param("filePidList") List<String> filePidList,
                       @Param("fileIdList") List<String> fileIdList,
                       @Param("oldDelFlag") Integer oldDelFlag);
-
+    
+    /**
+     * 查询用户使用空间
+     *
+     * @param userId 用户id
+     * @return {@link Long}
+     */
     Long selectUseSpace(@Param("userId") String userId);
 
     void deleteFileByUserId(@Param("userId") String userId);

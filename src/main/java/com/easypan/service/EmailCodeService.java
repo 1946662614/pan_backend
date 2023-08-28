@@ -2,7 +2,6 @@ package com.easypan.service;
 
 /**
  * @ClassName EmailCodeService
- * @Description TODO
  * @Author Henry
  * @Date 2023/8/10 16:31
  * @Version 1.0

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * @ClassName AppConfig
- * @Description TODO
  * @Author Henry
  * @Date 2023/8/11 14:43
  * @Version 1.0

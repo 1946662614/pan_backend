@@ -61,4 +61,28 @@ public class StringTools {
         }
         return true;
 	}
+    
+    public static String rename(String fileName) {
+        String fileNameReal = getFileNameNoSuffix(fileName);
+        String suffix = getFileSuffix(fileName);
+        return fileNameReal + "_" + getRandomNumber(Constants.LENGTH_5) + suffix;
+    }
+    
+    public static String getFileSuffix(String fileName) {
+        Integer index = fileName.lastIndexOf(".");
+        if (index == -1) {
+            return "";
+        }
+        String suffix = fileName.substring(index);
+        return suffix;
+    }
+    
+    public static String getFileNameNoSuffix(String fileName) {
+        Integer index = fileName.lastIndexOf(".");
+        if (index == -1) {
+            return fileName;
+        }
+        fileName = fileName.substring(0, index);
+        return fileName;
+    }
 }

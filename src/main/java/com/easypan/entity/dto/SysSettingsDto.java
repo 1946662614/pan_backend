@@ -7,7 +7,6 @@ import java.io.Serializable;
 
 /**
  * @ClassName SysSettingsDto
- * @Description TODO
  * @Author Henry
  * @Date 2023/8/11 15:06
  * @Version 1.0
