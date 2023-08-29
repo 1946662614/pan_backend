@@ -60,7 +60,7 @@ public class FileInfoController  extends ABaseController{
 	 * @param file       文件
 	 * @param fileName   文件名称
 	 * @param filePid    文件父级id
-	 * @param fileMD5    文件md5
+	 * @param fileMd5    文件md5
 	 * @param chunkIndex 块索引
 	 * @param chunks     块
 	 * @return {@link ResponseVO}
@@ -72,12 +72,12 @@ public class FileInfoController  extends ABaseController{
 								 MultipartFile file,
 								 @VerifyParam(required = true) String fileName,
 								 @VerifyParam(required = true) String filePid,
-								 @VerifyParam(required = true) String fileMD5,
+								 @VerifyParam(required = true) String fileMd5,
 								 @VerifyParam(required = true) Integer chunkIndex,
 								 @VerifyParam(required = true) Integer chunks
 								 ) {
 		SessionWebUserDto webUserDto = getUserInfoSession(session);
-		UploadResultDto resultDto = fileInfoService.uploadFile(webUserDto, fileId, file, fileName, filePid, fileMD5, chunkIndex, chunks);
+		UploadResultDto resultDto = fileInfoService.uploadFile(webUserDto, fileId, file, fileName, filePid, fileMd5, chunkIndex, chunks);
 		return getSuccessResponseVO(resultDto);
 	}
 
