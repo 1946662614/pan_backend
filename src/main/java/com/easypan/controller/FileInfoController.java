@@ -12,11 +12,13 @@ import com.easypan.entity.vo.FileInfoVO;
 import com.easypan.entity.vo.PaginationResultVO;
 import com.easypan.entity.vo.ResponseVO;
 import com.easypan.service.FileInfoService;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 
@@ -25,7 +27,7 @@ import javax.servlet.http.HttpSession;
  */
 @RestController("fileInfoController")
 @RequestMapping("/file")
-public class FileInfoController  extends ABaseController{
+public class FileInfoController  extends CommonFileController{
 	
 	@Resource
 	private FileInfoService fileInfoService;
@@ -80,8 +82,11 @@ public class FileInfoController  extends ABaseController{
 		UploadResultDto resultDto = fileInfoService.uploadFile(webUserDto, fileId, file, fileName, filePid, fileMd5, chunkIndex, chunks);
 		return getSuccessResponseVO(resultDto);
 	}
-
 	
+	@RequestMapping("/getImage/{imageFolder}/{imageName}")
+	public void getImage(HttpServletResponse response, @PathVariable("imageFolder") String imageFolder, @PathVariable("imageName") String imageName) {
+		super.getImage(response, imageFolder, imageName);
+	}
 	
 	
 	

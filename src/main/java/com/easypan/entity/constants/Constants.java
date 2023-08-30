@@ -23,9 +23,12 @@ public class Constants {
 	public static final String FILE_FOLDER_AVATAR_NAME = "avatar\\";
 	
 	public static final String AVATAR_SUFFIX = ".jpg";
+	public static final String IMAGE_PNG_SUFFIX = ".jpg";
 	public static final String FILE_FOLDER_TEMP = "temp/";
 	public static final String AVATAR_DEFAULT = "default.jpg";
 	
 	public static final String SESSION_SHARE_KEY = "session_share_key_";
 	public static final Long MB = 1024 * 1024L;
+	public static final String TS_NAME = "index.ts";
+	public static final String M3U8_NAME = "index.m3u8";
 }
