@@ -3,6 +3,7 @@ package com.easypan.controller;
 import com.easypan.component.RedisComponent;
 import com.easypan.entity.config.AppConfig;
 import com.easypan.entity.constants.Constants;
+import com.easypan.entity.dto.DownloadFileDto;
 import com.easypan.entity.enums.FileCategoryEnums;
 import com.easypan.entity.enums.FileFolderTypeEnums;
 import com.easypan.entity.enums.ResponseCodeEnum;
@@ -100,7 +101,7 @@ public class CommonFileController extends ABaseController {
         readFile(response, filePath);
     }
 
-    public ResponseVO getFolderInfo(String path, String userId) {
+    protected ResponseVO getFolderInfo(String path, String userId) {
         // 分割路径
         String[] pathArray = path.split("/");
         // 查询
@@ -114,10 +115,51 @@ public class CommonFileController extends ABaseController {
         List<FileInfo> fileInfoList = fileInfoService.findListByParam(infoQuery);
         return getSuccessResponseVO(CopyTools.copyList(fileInfoList, FileInfoVO.class));
     }
-
-   
     
+    /**
+     * 创建下载url
+     *
+     * @param fileId 文件id
+     * @param userId 用户id
+     * @return {@link ResponseVO}
+     */
+    protected ResponseVO createDownloadUrl(String fileId, String userId) {
+        FileInfo fileInfo = fileInfoService.getFileInfoByFileIdAndUserId(fileId, userId);
+        if (fileInfo == null) {
+            throw new BusinessException(ResponseCodeEnum.CODE_600);
+        }
+        // 下载项为目录
+        if (FileFolderTypeEnums.FOLDER.getType().equals(fileInfo.getFolderType())) {
+            throw new BusinessException(ResponseCodeEnum.CODE_600);
+        }
+        
+        String code = StringTools.getRandomString(Constants.LENGTH_50);
+        DownloadFileDto fileDto = new DownloadFileDto();
+        fileDto.setDownloadCode(code);
+        fileDto.setFilePath(fileInfo.getFilePath());
+        fileDto.setFileName(fileInfo.getFileName());
+        // code存入redis
+        redisComponent.saveDownloadCode(code, fileDto);
+        
+        return getSuccessResponseVO(code);
+   }
     
+    protected void download(HttpServletRequest request, HttpServletResponse response, String code) throws Exception {
+        DownloadFileDto downloadFileDto = redisComponent.getDownloadDto(code);
+        if (downloadFileDto == null) {
+            return;
+        }
+        String filePath = appConfig.getProjectFolder() + Constants.FILE_FOLDER_FILE + downloadFileDto.getFilePath();
+        String fileName = downloadFileDto.getFileName();
+        response.setContentType("application/x-msdownload; charset=UTF-8");
+        if (request.getHeader("User-Agent").toLowerCase().indexOf("msie") > 0) {//IE浏览器
+            fileName = URLEncoder.encode(fileName, "UTF-8");
+        } else {
+            fileName = new String(fileName.getBytes("UTF-8"), "ISO8859-1");
+        }
+        response.setHeader("Content-Disposition", "attachment;filename=\"" + fileName + "\"");
+        readFile(response, filePath);
+    }
     
     
     

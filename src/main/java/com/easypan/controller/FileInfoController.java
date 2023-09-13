@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -217,15 +218,20 @@ public class FileInfoController  extends CommonFileController{
 	 * @param fileId  文件id
 	 * @return {@link ResponseVO}
 	 */
-	@RequestMapping("/createDownloadUrl")
+	@RequestMapping("/createDownloadUrl/{fileId}")
 	@GlobalInterceptor(checkParams = true)
 	public ResponseVO createDownloadUrl( HttpSession session,
 										@VerifyParam(required = true) @PathVariable("fileId") String fileId) {
 		SessionWebUserDto webUserDto = getUserInfoSession(session);
-		return getSuccessResponseVO(null);
+		return super.createDownloadUrl(fileId, webUserDto.getUserId());
 	}
 	
-	
+	@RequestMapping("/download/{code}")
+	@GlobalInterceptor(checkParams = true, checkLogin = false)
+	public void download(HttpServletRequest request, HttpServletResponse response,
+							   @VerifyParam(required = true) @PathVariable("code") String code) throws Exception {
+		super.download(request, response, code);
+	}
 	
 	
 	
