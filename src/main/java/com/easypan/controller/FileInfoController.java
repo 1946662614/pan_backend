@@ -7,6 +7,7 @@ import com.easypan.entity.dto.SessionWebUserDto;
 import com.easypan.entity.dto.UploadResultDto;
 import com.easypan.entity.enums.FileCategoryEnums;
 import com.easypan.entity.enums.FileDelFlagEnums;
+import com.easypan.entity.po.FileInfo;
 import com.easypan.entity.query.FileInfoQuery;
 import com.easypan.entity.vo.FileInfoVO;
 import com.easypan.entity.vo.PaginationResultVO;
@@ -103,7 +104,14 @@ public class FileInfoController  extends CommonFileController{
 		super.getFile(response, fileId, webUserDto.getUserId());
 	}
 	
-	
+	@RequestMapping("/newFoloder")
+	@GlobalInterceptor(checkParams = true)
+	public ResponseVO newFoloder( HttpSession session,@VerifyParam(required = true) String filePid,
+							@VerifyParam(required = true) String fileName) {
+		SessionWebUserDto webUserDto = getUserInfoSession(session);
+		FileInfo fileInfo = fileInfoService.newFolder(filePid, fileName, webUserDto.getUserId());
+		return getSuccessResponseVO(fileInfo);
+	}
 	
 	
 	

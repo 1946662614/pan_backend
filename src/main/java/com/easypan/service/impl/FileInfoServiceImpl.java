@@ -289,6 +289,54 @@ public class FileInfoServiceImpl implements FileInfoService {
 	}
 	
 	/**
+	 * 新建文件夹
+	 *
+	 * @param Pid      pid
+	 * @param fileName 文件名
+	 * @param userId   用户id
+	 * @return {@link FileInfo}
+	 */
+	@Override
+	public FileInfo newFolder(String filePid, String fileName, String userId) {
+		// 检查文件名
+		checkFileName(filePid,fileName,userId,FileFolderTypeEnums.FOLDER.getType());
+		// 存表
+		Date curDate = new Date();
+		FileInfo fileInfo = new FileInfo();
+		fileInfo.setFileId(StringTools.getRandomString(Constants.LENGTH_10));
+		fileInfo.setUserId(userId);
+		fileInfo.setFilePid(filePid);
+		fileInfo.setFileName(fileName);
+		fileInfo.setFolderType(FileFolderTypeEnums.FOLDER.getType());
+		fileInfo.setCreateTime(curDate);
+		fileInfo.setLastUpdateTime(curDate);
+		fileInfo.setStatus(FileStatusEnums.USING.getStatus());
+		fileInfo.setDelFlag(FileDelFlagEnums.USING.getFlag());
+		this.fileInfoMapper.insert(fileInfo);
+		return fileInfo;
+	}
+	
+	/**
+	 * 检查文件名
+	 *
+	 * @param filePid    文件pid
+	 * @param fileName   文件名
+	 * @param userId     用户id
+	 * @param folderType 文件夹类型
+	 */
+	private void checkFileName(String filePid, String fileName, String userId, Integer folderType) {
+		FileInfoQuery fileInfoQuery = new FileInfoQuery();
+		fileInfoQuery.setFolderType(folderType);
+		fileInfoQuery.setFileName(fileName);
+		fileInfoQuery.setFilePid(filePid);
+		fileInfoQuery.setUserId(userId);
+		Integer count = this.fileInfoMapper.selectCount(fileInfoQuery);
+		if (count > 0) {
+			throw new BusinessException("此目录下已存在同名文件，请修改名称");
+		}
+	}
+	
+	/**
 	 * 自动重命名
 	 *
 	 * @param filePid  文件pid

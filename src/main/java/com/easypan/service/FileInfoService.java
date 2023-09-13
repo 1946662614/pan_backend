@@ -9,6 +9,7 @@ import com.sun.org.apache.xpath.internal.operations.Mult;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -80,6 +81,15 @@ public interface FileInfoService {
      */
     UploadResultDto uploadFile (SessionWebUserDto webUserDto, String fileId, MultipartFile file, String fileName, String filePid,
                                 String fileMD5, Integer chunkIndex, Integer chunks);
-
     
+    
+    /**
+     * 新建文件夹
+     *
+     * @param Pid      pid
+     * @param fileName 文件名
+     * @param userId   用户id
+     * @return {@link FileInfo}
+     */
+    FileInfo newFolder(String Pid, String fileName, String userId);
 }
