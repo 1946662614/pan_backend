@@ -103,4 +103,14 @@ public interface FileInfoService {
      * @return {@link FileInfoQuery}
      */
     FileInfo rename(String fileId,String userId, String fileName);
+    
+    /**
+     * 更改文件夹
+     *
+     * @param fileIds 文件ID
+     * @param filePid 文件pid
+     * @param userId  用户id
+     */
+    void changeFileFolder(String fileIds,String filePid, String userId);
+    
 }

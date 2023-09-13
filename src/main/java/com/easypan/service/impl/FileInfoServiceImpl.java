@@ -40,6 +40,8 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.text.DateFormat;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 /**
@@ -325,6 +327,7 @@ public class FileInfoServiceImpl implements FileInfoService {
 	 * @return {@link FileInfoQuery}
 	 */
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public FileInfo rename(String fileId, String userId, String fileName) {
 		// 判断是否存在
 		FileInfo fileInfo = this.fileInfoMapper.selectByFileIdAndUserId(fileId,userId);
@@ -354,6 +357,53 @@ public class FileInfoServiceImpl implements FileInfoService {
 		fileInfo.setFileName(fileName);
 		fileInfo.setLastUpdateTime(curDate);
 		return fileInfo;
+	}
+	
+	/**
+	 * 更改文件夹
+	 *
+	 * @param fileIds 文件ID
+	 * @param filePid 文件pid
+	 * @param userId  用户id
+	 */
+	@Override
+	public void changeFileFolder(String fileIds, String filePid, String userId) {
+		if (fileIds.equals(filePid)) {
+			throw new BusinessException(ResponseCodeEnum.CODE_600);
+		}
+		// 不在根目录下
+		if (!Constants.ZERO_STR.equals(filePid)) {
+			FileInfo fileInfo = fileInfoService.getFileInfoByFileIdAndUserId(filePid, userId);
+			if (fileInfo == null || FileDelFlagEnums.DEL.getFlag().equals(fileInfo.getDelFlag())) {
+				throw new BusinessException(ResponseCodeEnum.CODE_600);
+			}
+		}
+		
+		String[] fileIdArray = fileIds.split(",");
+		FileInfoQuery query = new FileInfoQuery();
+		query.setFilePid(filePid);
+		query.setUserId(userId);
+		List<FileInfo> dbFileList = fileInfoService.findListByParam(query);
+	
+		Map<String, FileInfo> dbFileNameMap = dbFileList.stream().collect(Collectors.toMap(FileInfo::getFileName, Function.identity(), (file1, file2) -> file2));
+		// 查询选中的文件
+		query = new FileInfoQuery();
+		query.setUserId(userId);
+		query.setFileIdArray(fileIdArray);
+		List<FileInfo> selectFileList = this.findListByParam(query);
+		
+		// 将所选文件重命名
+		for (FileInfo item : selectFileList) {
+			FileInfo rootFileInfo = dbFileNameMap.get(item.getFileName());
+			// 文件名已存在，重命名被还原的文件名
+			FileInfo updateInfo = new FileInfo();
+			if (rootFileInfo != null) {
+				String fileName = StringTools.rename(item.getFileName());
+				updateInfo.setFileName(fileName);
+			}
+			updateInfo.setFilePid(filePid);
+			this.fileInfoMapper.updateByFileIdAndUserId(updateInfo, item.getFileId(), userId);
+		}
 	}
 	
 	/**

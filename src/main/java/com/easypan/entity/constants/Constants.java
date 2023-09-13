@@ -11,6 +11,7 @@ public class Constants {
 	public static final Integer LENGTH_30 = 30;
 	public static final Integer LENGTH_150 = 150;
 	public static final Integer ZERO = 0;
+	public static final String ZERO_STR = "0";
 	public static final String VIEW_OBJ_RESULT_KEY = "result";
 	public static final String SESSION_KEY = "session_key";
 	public static final Integer REDIS_KEY_EXPIRES_ONE_MIN = 60;
