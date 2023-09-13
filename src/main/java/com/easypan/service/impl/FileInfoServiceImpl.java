@@ -291,7 +291,7 @@ public class FileInfoServiceImpl implements FileInfoService {
 	/**
 	 * 新建文件夹
 	 *
-	 * @param Pid      pid
+	 * @param filePid      pid
 	 * @param fileName 文件名
 	 * @param userId   用户id
 	 * @return {@link FileInfo}
@@ -313,6 +313,46 @@ public class FileInfoServiceImpl implements FileInfoService {
 		fileInfo.setStatus(FileStatusEnums.USING.getStatus());
 		fileInfo.setDelFlag(FileDelFlagEnums.USING.getFlag());
 		this.fileInfoMapper.insert(fileInfo);
+		return fileInfo;
+	}
+	
+	/**
+	 * 重命名
+	 *
+	 * @param fileId   文件id
+	 * @param userId   用户id
+	 * @param fileName 文件名
+	 * @return {@link FileInfoQuery}
+	 */
+	@Override
+	public FileInfo rename(String fileId, String userId, String fileName) {
+		// 判断是否存在
+		FileInfo fileInfo = this.fileInfoMapper.selectByFileIdAndUserId(fileId,userId);
+		if (fileInfo == null) {
+			throw new BusinessException("文件不存在");
+		}
+		String filePid = fileInfo.getFilePid();
+		checkFileName(filePid,fileName,userId,fileInfo.getFolderType());
+		// 获取文件后缀
+		if (FileFolderTypeEnums.FILE.getType().equals(fileInfo.getFolderType())) {
+			fileName = fileName + StringTools.getFileSuffix(fileInfo.getFileName());
+		}
+		Date curDate = new Date();
+		FileInfo dbInfo = new FileInfo();
+		dbInfo.setFileName(fileName);
+		dbInfo.setLastUpdateTime(curDate);
+		this.fileInfoMapper.updateByFileIdAndUserId(dbInfo,fileId,userId);
+		
+		FileInfoQuery fileInfoQuery = new FileInfoQuery();
+		fileInfoQuery.setFilePid(filePid);
+		fileInfoQuery.setUserId(userId);
+		fileInfoQuery.setFileName(fileName);
+		Integer count = this.fileInfoMapper.selectCount(fileInfoQuery);
+		if (count > 1) {
+			throw new BusinessException("文件名" + fileName + "已存在");
+		}
+		fileInfo.setFileName(fileName);
+		fileInfo.setLastUpdateTime(curDate);
 		return fileInfo;
 	}
 	

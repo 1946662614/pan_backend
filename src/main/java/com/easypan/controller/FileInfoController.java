@@ -145,6 +145,23 @@ public class FileInfoController  extends CommonFileController{
 	}
 	
 	
+	/**
+	 * 重命名
+	 *
+	 * @param session  一场
+	 * @param fileId   文件id
+	 * @param fileName 文件名
+	 * @return {@link ResponseVO}
+	 */
+	@RequestMapping("/rename")
+	@GlobalInterceptor(checkParams = true)
+	public ResponseVO rename( HttpSession session,
+									 @VerifyParam(required = true) String fileId,
+							         @VerifyParam(required = true) String fileName) {
+		SessionWebUserDto webUserDto = getUserInfoSession(session);
+		FileInfo fileInfo = fileInfoService.rename(fileId, webUserDto.getUserId(), fileName);
+		return getSuccessResponseVO(fileInfo);
+	}
 	
 	
 	

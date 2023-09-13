@@ -92,4 +92,15 @@ public interface FileInfoService {
      * @return {@link FileInfo}
      */
     FileInfo newFolder(String Pid, String fileName, String userId);
+    
+    
+    /**
+     * 重命名
+     *
+     * @param fileId   文件id
+     * @param userId   用户id
+     * @param fileName 文件名
+     * @return {@link FileInfoQuery}
+     */
+    FileInfo rename(String fileId,String userId, String fileName);
 }
