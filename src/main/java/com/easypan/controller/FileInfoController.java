@@ -97,6 +97,13 @@ public class FileInfoController  extends CommonFileController{
 		super.getFile(response, fileId, webUserDto.getUserId());
 	}
 	
+	/**
+	 * 获取文件
+	 *
+	 * @param response 回答
+	 * @param session  一场
+	 * @param fileId   文件id
+	 */
 	@RequestMapping("/getFile/{fileId}")
 	@GlobalInterceptor(checkParams = true)
 	public void getFile(HttpServletResponse response, HttpSession session, @PathVariable("fileId") @VerifyParam(required = true) String fileId) {
@@ -104,6 +111,14 @@ public class FileInfoController  extends CommonFileController{
 		super.getFile(response, fileId, webUserDto.getUserId());
 	}
 	
+	/**
+	 * 新建文件夹
+	 *
+	 * @param session  一场
+	 * @param filePid  文件pid
+	 * @param fileName 文件名
+	 * @return {@link ResponseVO}
+	 */
 	@RequestMapping("/newFoloder")
 	@GlobalInterceptor(checkParams = true)
 	public ResponseVO newFoloder( HttpSession session,@VerifyParam(required = true) String filePid,
@@ -114,6 +129,20 @@ public class FileInfoController  extends CommonFileController{
 	}
 	
 	
+	/**
+	 * 获取文件夹信息
+	 *
+	 * @param session 一场
+	 * @param path    路径
+	 * @return {@link ResponseVO}
+	 */
+	@RequestMapping("/getFolderInfo")
+	@GlobalInterceptor(checkParams = true)
+	public ResponseVO getFolderInfo( HttpSession session,
+									 @VerifyParam(required = true) String path) {
+		SessionWebUserDto webUserDto = getUserInfoSession(session);
+		return super.getFolderInfo(path, webUserDto.getUserId());
+	}
 	
 	
 	

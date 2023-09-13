@@ -99,7 +99,33 @@ public class CommonFileController extends ABaseController {
         readFile(response, filePath);
     }
 
-    
+    public ResponseVO getFolderInfo(String path, String userId) {
+        // 分割路径
+        String[] pathArray = path.split("/");
+        // 查询
+        FileInfoQuery infoQuery = new FileInfoQuery();
+        infoQuery.setUserId(userId);
+        infoQuery.setFolderType(FileFolderTypeEnums.FOLDER.getType());
+        infoQuery.setFileIdArray(pathArray);
+        // 排序
+        String orderBy = "field(file_id,\"" + StringUtils.join(pathArray,"\",\"") + "\")";
+        infoQuery.setOrderBy(orderBy);
+        List<FileInfo> fileInfoList = fileInfoService.findListByParam(infoQuery);
+        return getSuccessResponseVO(fileInfoList);
+    }
 
    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
