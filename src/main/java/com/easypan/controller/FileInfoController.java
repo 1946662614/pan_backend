@@ -226,6 +226,14 @@ public class FileInfoController  extends CommonFileController{
 		return super.createDownloadUrl(fileId, webUserDto.getUserId());
 	}
 	
+	/**
+	 * 下载
+	 *
+	 * @param request  要求
+	 * @param response 回答
+	 * @param code     密码
+	 * @throws Exception 例外
+	 */
 	@RequestMapping("/download/{code}")
 	@GlobalInterceptor(checkParams = true, checkLogin = false)
 	public void download(HttpServletRequest request, HttpServletResponse response,
@@ -233,7 +241,14 @@ public class FileInfoController  extends CommonFileController{
 		super.download(request, response, code);
 	}
 	
-	
+	@RequestMapping("/delFile")
+	@GlobalInterceptor(checkParams = true)
+	public ResponseVO delFile( HttpSession session,
+										 @VerifyParam(required = true) String fileIds) {
+		SessionWebUserDto webUserDto = getUserInfoSession(session);
+		fileInfoService.removeFile2RecycleBatch(webUserDto.getUserId(), fileIds);
+		return getSuccessResponseVO(null);
+	}
 	
 	
 	

@@ -30,7 +30,16 @@ public interface FileInfoMapper<T, P> extends BaseMapper<T, P> {
 
     void updateFileStatusWithOldStatus(@Param("fileId") String fileId, @Param("userId") String userId, @Param("bean") T t,
                                        @Param("oldStatus") Integer oldStatus);
-
+    
+    /**
+     * 批量更新文件del标志
+     *
+     * @param fileInfo    文件简介
+     * @param userId      用户id
+     * @param filePidList 文件pid列表
+     * @param fileIdList  文件id列表
+     * @param oldDelFlag  旧德尔旗
+     */
     void updateFileDelFlagBatch(@Param("bean") FileInfo fileInfo,
                                 @Param("userId") String userId,
                                 @Param("filePidList") List<String> filePidList,
@@ -52,4 +61,6 @@ public interface FileInfoMapper<T, P> extends BaseMapper<T, P> {
     Long selectUseSpace(@Param("userId") String userId);
 
     void deleteFileByUserId(@Param("userId") String userId);
+    
+    
 }

@@ -407,6 +407,62 @@ public class FileInfoServiceImpl implements FileInfoService {
 	}
 	
 	/**
+	 * 删除file到回收站
+	 *
+	 * @param userId  用户id
+	 * @param fileIds 文件ID
+	 */
+	@Override
+	public void removeFile2RecycleBatch(String userId, String fileIds) {
+		
+		String[] fileIdArray = fileIds.split(",");
+		FileInfoQuery query = new FileInfoQuery();
+		query.setUserId(userId);
+		query.setFileIdArray(fileIdArray);
+		query.setDelFlag(FileDelFlagEnums.USING.getFlag());
+		List<FileInfo> fileInfoList = this.fileInfoMapper.selectList(query);
+		if (fileInfoList.isEmpty()) {
+			return;
+		}
+		// 删除文件时，要查询所有子文件
+		List<String> delFilePidList = new ArrayList<>();
+		for (FileInfo fileInfo : fileInfoList) {
+			findAllSubFolderFileIdList(delFilePidList, userId, fileInfo.getFileId(), FileDelFlagEnums.USING.getFlag());
+		}
+		if (!delFilePidList.isEmpty()) {
+			FileInfo updateInfo = new FileInfo();
+			updateInfo.setDelFlag(FileDelFlagEnums.DEL.getFlag());
+			this.fileInfoMapper.updateFileDelFlagBatch(updateInfo, userId, delFilePidList, null, FileDelFlagEnums.USING.getFlag());
+		}
+		// 将选中的文件更新为回收站状态
+		List<String> delFileIdList = Arrays.asList(fileIdArray);
+		FileInfo fileInfo = new FileInfo();
+		fileInfo.setRecoveryTime(new Date());
+		fileInfo.setDelFlag(FileDelFlagEnums.RECYCLE.getFlag());
+		this.fileInfoMapper.updateFileDelFlagBatch(fileInfo, userId, null, delFileIdList, FileDelFlagEnums.USING.getFlag());
+	}
+	
+	/**
+	 * 递归查找所有子文件夹文件列表
+	 *
+	 * @param fileIdList 文件id列表
+	 * @param userId     用户id
+	 * @param fileId     文件id
+	 * @param delFlag    德尔旗
+	 */
+	private void findAllSubFolderFileIdList(List<String> fileIdList, String userId, String fileId, Integer delFlag) {
+		fileIdList.add(fileId);
+		FileInfoQuery query = new FileInfoQuery();
+		query.setUserId(userId);
+		query.setFilePid(fileId);
+		query.setDelFlag(delFlag);
+		query.setFolderType(FileFolderTypeEnums.FOLDER.getType());
+		List<FileInfo> fileInfoList = this.fileInfoMapper.selectList(query);
+		for (FileInfo fileInfo : fileInfoList) {
+			findAllSubFolderFileIdList(fileIdList, userId, fileInfo.getFileId(), delFlag);
+		}
+	}
+	/**
 	 * 检查文件名
 	 *
 	 * @param filePid    文件pid
