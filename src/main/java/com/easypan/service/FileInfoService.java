@@ -121,4 +121,12 @@ public interface FileInfoService {
      */
     void removeFile2RecycleBatch(String userId, String fileIds);
     
+    
+    /**
+     * 恢复文件批处理
+     *
+     * @param userId  用户id
+     * @param fileIds 文件ID
+     */
+    void recoverFileBatch(String userId, String fileIds);
 }

@@ -443,6 +443,60 @@ public class FileInfoServiceImpl implements FileInfoService {
 	}
 	
 	/**
+	 * 恢复文件批处理
+	 *
+	 * @param userId  用户id
+	 * @param fileIds 文件ID
+	 */
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void recoverFileBatch(String userId, String fileIds) {
+		String[] fileIdArray = fileIds.split(",");
+		FileInfoQuery query = new FileInfoQuery();
+		query.setUserId(userId);
+		query.setFileIdArray(fileIdArray);
+		query.setDelFlag(FileDelFlagEnums.RECYCLE.getFlag());
+		List<FileInfo> fileInfoList = this.fileInfoMapper.selectList(query);
+		List<String> delFileSubFolderFileIdList = new ArrayList<>();
+		for (FileInfo fileInfo : fileInfoList) {
+			if (FileFolderTypeEnums.FOLDER.getType().equals(fileInfo.getFolderType())) {
+				findAllSubFolderFileIdList(delFileSubFolderFileIdList, userId, fileInfo.getFileId(),FileDelFlagEnums.DEL.getFlag());
+			}
+		}
+		// 查找所有根目录文件
+		query = new FileInfoQuery();
+		query.setUserId(userId);
+		query.setDelFlag(FileDelFlagEnums.USING.getFlag());
+		query.setFilePid(Constants.ZERO_STR);
+		List<FileInfo> allRootFileList = this.findListByParam(query);
+		Map<String, FileInfo> rootFileMap = allRootFileList.stream().collect(Collectors.toMap(FileInfo::getFileName, Function.identity(), (file1, file2) -> file2));
+		// 查询所有所选文件，将目录下所有删除的文件状态更新为使用中
+		if (!delFileSubFolderFileIdList.isEmpty()) {
+			FileInfo fileInfo = new FileInfo();
+			fileInfo.setDelFlag(FileDelFlagEnums.USING.getFlag());
+			this.fileInfoMapper.updateFileDelFlagBatch(fileInfo, userId, delFileSubFolderFileIdList, null, FileDelFlagEnums.DEL.getFlag());
+		}
+		// 将选中文件更新为正常，且更新其父级目录到根目录
+		List<String> delFileIdList = Arrays.asList(fileIdArray);
+		FileInfo fileInfo = new FileInfo();
+		fileInfo.setDelFlag(FileDelFlagEnums.USING.getFlag());
+		fileInfo.setFilePid(Constants.ZERO_STR);
+		fileInfo.setLastUpdateTime(new Date());
+		this.fileInfoMapper.updateFileDelFlagBatch(fileInfo,userId,null, delFileIdList, FileDelFlagEnums.RECYCLE.getFlag());
+		// 将所选文件重命名
+		for (FileInfo item : fileInfoList) {
+			FileInfo rootFileInfo = rootFileMap.get(item.getFileName());
+			// 文件名已存在，重命名被还原的文件名
+			if (rootFileInfo != null) {
+				String filename = StringTools.rename(item.getFileName());
+				FileInfo updateInfo = new FileInfo();
+				updateInfo.setFileName(filename);
+				this.fileInfoMapper.updateByFileIdAndUserId(updateInfo,item.getFileId(), userId);
+			}
+		}
+	}
+	
+	/**
 	 * 递归查找所有子文件夹文件列表
 	 *
 	 * @param fileIdList 文件id列表
