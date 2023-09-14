@@ -350,6 +350,7 @@ public class FileInfoServiceImpl implements FileInfoService {
 		fileInfoQuery.setFilePid(filePid);
 		fileInfoQuery.setUserId(userId);
 		fileInfoQuery.setFileName(fileName);
+		fileInfoQuery.setDelFlag(FileDelFlagEnums.USING.getFlag());
 		Integer count = this.fileInfoMapper.selectCount(fileInfoQuery);
 		if (count > 1) {
 			throw new BusinessException("文件名" + fileName + "已存在");
@@ -497,6 +498,51 @@ public class FileInfoServiceImpl implements FileInfoService {
 	}
 	
 	/**
+	 * 删除文件批处理
+	 *
+	 * @param userId  用户id
+	 * @param fileIds 文件ID
+	 * @param adminOp 管理员操作
+	 */
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void delFileBatch(String userId, String fileIds, Boolean adminOp) {
+		String[] fileIdArray = fileIds.split(",");
+		FileInfoQuery query = new FileInfoQuery();
+		query.setUserId(userId);
+		query.setFileIdArray(fileIdArray);
+		query.setDelFlag(FileDelFlagEnums.RECYCLE.getFlag());
+		List<FileInfo> fileInfoList = this.fileInfoMapper.selectList(query);
+		
+		List<String> delFileSubFileFolderFileIdList = new ArrayList<>();
+		// 找到所选文件子目录id
+		for (FileInfo fileInfo: fileInfoList) {
+			if (FileFolderTypeEnums.FOLDER.getType().equals(fileInfo.getFileType())) {
+			findAllSubFolderFileIdList(delFileSubFileFolderFileIdList, userId,fileInfo.getFileId(), FileDelFlagEnums.DEL.getFlag());
+			}
+		}
+		
+		// 删除所选文件子目录中的文件
+		if (!delFileSubFileFolderFileIdList.isEmpty()) {
+			this.fileInfoMapper.delFileBatch(userId, delFileSubFileFolderFileIdList, null, adminOp ? null : FileDelFlagEnums.DEL.getFlag());
+		}
+		
+		// 删除所选文件
+		this.fileInfoMapper.delFileBatch(userId, null, Arrays.asList(fileIdArray), adminOp ? null : FileDelFlagEnums.RECYCLE.getFlag());
+		
+		// 更新用户空间
+		Long useSpace = this.fileInfoMapper.selectUseSpace(userId);
+		UserInfo userInfo = new UserInfo();
+		userInfo.setUseSpace(useSpace);
+		this.userInfoMapper.updateByUserId(userInfo, userId);
+		
+		// 更新缓存
+		UserSpaceDto userSpaceDto = redisComponent.getUserSpaceUse(userId);
+		userSpaceDto.setUseSpace(useSpace);
+		redisComponent.saveUserSpaceUse(userId,userSpaceDto);
+	}
+	
+	/**
 	 * 递归查找所有子文件夹文件列表
 	 *
 	 * @param fileIdList 文件id列表
@@ -530,6 +576,7 @@ public class FileInfoServiceImpl implements FileInfoService {
 		fileInfoQuery.setFileName(fileName);
 		fileInfoQuery.setFilePid(filePid);
 		fileInfoQuery.setUserId(userId);
+		fileInfoQuery.setDelFlag(FileDelFlagEnums.USING.getFlag());
 		Integer count = this.fileInfoMapper.selectCount(fileInfoQuery);
 		if (count > 0) {
 			throw new BusinessException("此目录下已存在同名文件，请修改名称");
