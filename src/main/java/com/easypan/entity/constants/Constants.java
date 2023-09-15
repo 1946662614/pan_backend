@@ -8,6 +8,7 @@ public class Constants {
 	public static final Integer LENGTH_5 = 5;
 	public static final Integer LENGTH_10 = 10;
 	public static final Integer LENGTH_15 = 15;
+	public static final Integer LENGTH_20 = 20;
 	public static final Integer LENGTH_30 = 30;
 	public static final Integer LENGTH_50 = 50;
 	public static final Integer LENGTH_150 = 150;
