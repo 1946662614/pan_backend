@@ -7,11 +7,14 @@ import com.easypan.entity.dto.QQInfoDto;
 import com.easypan.entity.dto.SessionWebUserDto;
 import com.easypan.entity.dto.SysSettingsDto;
 import com.easypan.entity.dto.UserSpaceDto;
+import com.easypan.entity.enums.PageSize;
 import com.easypan.entity.enums.UserStatusEnum;
 import com.easypan.entity.po.FileInfo;
 import com.easypan.entity.po.UserInfo;
 import com.easypan.entity.query.FileInfoQuery;
+import com.easypan.entity.query.SimplePage;
 import com.easypan.entity.query.UserInfoQuery;
+import com.easypan.entity.vo.PaginationResultVO;
 import com.easypan.exception.BusinessException;
 import com.easypan.mappers.FileInfoMapper;
 import com.easypan.mappers.UserInfoMapper;
@@ -33,6 +36,7 @@ import javax.security.auth.login.AppConfigurationEntry;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -69,6 +73,37 @@ public class UserInfoServiceImpl implements UserInfoService {
 	@Override
 	public Integer updateUserInfoByUserId(UserInfo bean, String userId) {
 		return this.userInfoMapper.updateByUserId(bean, userId);
+	}
+	
+	/**
+	 * 根据条件查询列表
+	 */
+	@Override
+	public List<UserInfo> findListByParam(UserInfoQuery param) {
+		return this.userInfoMapper.selectList(param);
+	}
+	
+	/**
+	 * 根据条件查询列表
+	 */
+	@Override
+	public Integer findCountByParam(UserInfoQuery param) {
+		return this.userInfoMapper.selectCount(param);
+	}
+	
+	/**
+	 * 分页查询方法
+	 */
+	@Override
+	public PaginationResultVO<UserInfo> findListByPage(UserInfoQuery param) {
+		int count = this.findCountByParam(param);
+		int pageSize = param.getPageSize() == null ? PageSize.SIZE15.getSize() : param.getPageSize();
+		
+		SimplePage page = new SimplePage(param.getPageNo(), count, pageSize);
+		param.setSimplePage(page);
+		List<UserInfo> list = this.findListByParam(param);
+		PaginationResultVO<UserInfo> result = new PaginationResultVO(count, page.getPageSize(), page.getPageNo(), page.getPageTotal(), list);
+		return result;
 	}
 	
 	@Override
@@ -202,6 +237,31 @@ public class UserInfoServiceImpl implements UserInfoService {
 		userSpaceDto.setTotalSpace(user.getTotalSpace());
 		redisComponent.saveUserSpaceUse(user.getUserId(), userSpaceDto);
 		return sessionWebUserDto;
+	}
+	
+	/**
+	 * 更新用户状态
+	 *
+	 * @param userId 用户id
+	 * @param status 地位
+	 */
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateUserStatus(String userId, Integer status) {
+		UserInfo userInfo = new UserInfo();
+		userInfo.setStatus(status);
+		if (UserStatusEnum.DISABLE.getStatus().equals(status)) {
+			userInfo.setUseSpace(0L);
+			fileInfoMapper.deleteFileByUserId(userId);
+		}
+		userInfoMapper.updateByUserId(userInfo, userId);
+	}
+	
+	@Override
+	public void updateUserSpace(String userId, Integer changeSpace) {
+		Long space = changeSpace * Constants.MB;
+		this.userInfoMapper.updateUserSpace(userId, null, space);
+		redisComponent.resetUserSpaceUse(userId);
 	}
 	
 	private String getQQAccessToken(String code) {

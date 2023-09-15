@@ -5,8 +5,12 @@ import com.easypan.entity.dto.DownloadFileDto;
 import com.easypan.entity.dto.SysSettingsDto;
 import com.easypan.entity.dto.UserSpaceDto;
 import com.easypan.entity.po.FileInfo;
+import com.easypan.entity.po.UserInfo;
 import com.easypan.entity.query.FileInfoQuery;
+import com.easypan.entity.query.UserInfoQuery;
 import com.easypan.mappers.FileInfoMapper;
+import com.easypan.mappers.UserInfoMapper;
+import org.apache.catalina.User;
 import org.springframework.boot.autoconfigure.amqp.RabbitTemplateConfigurer;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +30,8 @@ public class RedisComponent {
 	 private RedisUtils redisUtils;
 	@Resource
 	private FileInfoMapper<FileInfo, FileInfoQuery> fileInfoMapper;
+	@Resource
+	private UserInfoMapper<UserInfo, UserInfoQuery> userInfoMapper;
 	
 	public SysSettingsDto getSysSettings() {
 		SysSettingsDto sysSettingsDto = (SysSettingsDto) redisUtils.get(Constants.REDIS_KEY_SYS_SETTING);
@@ -34,6 +40,10 @@ public class RedisComponent {
 			redisUtils.set(Constants.REDIS_KEY_SYS_SETTING, sysSettingsDto);
 		}
 		return sysSettingsDto;
+	}
+	
+	public void saveSysSettingsDto(SysSettingsDto dto) {
+		redisUtils.set(Constants.REDIS_KEY_SYS_SETTING,dto);
 	}
 	
 	/**
@@ -45,6 +55,23 @@ public class RedisComponent {
 	public void saveUserSpaceUse(String userId, UserSpaceDto userSpaceDto) {
 		redisUtils.setex(Constants.REDIS_KEY_USER_SPACE_USE + userId, userSpaceDto, Constants.REDIS_KEY_EXPIRES_DAY);
 	}
+	
+	/**
+	 * 重置用户空间使用
+	 *
+	 * @param userId 用户id
+	 * @return {@link UserSpaceDto}
+	 */
+	public UserSpaceDto resetUserSpaceUse(String userId) {
+		UserSpaceDto spaceDto = new UserSpaceDto();
+		Long useSpace = this.fileInfoMapper.selectUseSpace(userId);
+		spaceDto.setUseSpace(useSpace);
+		UserInfo userInfo = this.userInfoMapper.selectByUserId(userId);
+		spaceDto.setTotalSpace(userInfo.getTotalSpace());
+		redisUtils.setex(Constants.REDIS_KEY_USER_SPACE_USE + userId, spaceDto, Constants.REDIS_KEY_EXPIRES_DAY);
+		return spaceDto;
+	}
+	
 	
 	/**
 	 * 获取用户使用空间
@@ -113,4 +140,5 @@ public class RedisComponent {
 	public DownloadFileDto getDownloadDto(String code) {
 		return (DownloadFileDto) redisUtils.get(Constants.REDIS_KEY_DOWNLOAD + code);
 	}
+	
 }

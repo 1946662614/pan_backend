@@ -138,4 +138,6 @@ public interface FileInfoService {
      * @param adminOp 管理员操作
      */
     void delFileBatch(String userId, String  fileIds,  Boolean adminOp);
+    
+    void deleteFileByUserId(String userId);
 }

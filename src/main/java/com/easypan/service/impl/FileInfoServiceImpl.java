@@ -542,6 +542,11 @@ public class FileInfoServiceImpl implements FileInfoService {
 		redisComponent.saveUserSpaceUse(userId,userSpaceDto);
 	}
 	
+	@Override
+	public void deleteFileByUserId(String userId) {
+		this.fileInfoMapper.deleteFileByUserId(userId);
+	}
+	
 	/**
 	 * 递归查找所有子文件夹文件列表
 	 *
