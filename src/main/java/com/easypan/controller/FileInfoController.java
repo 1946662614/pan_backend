@@ -178,18 +178,17 @@ public class FileInfoController  extends CommonFileController{
 	 */
 	@RequestMapping("/loadAllFolder")
 	@GlobalInterceptor(checkParams = true)
-	public ResponseVO loadAllFolder( HttpSession session,
-							  @VerifyParam(required = true) String filePid, String currentFileIds) {
-		SessionWebUserDto webUserDto = getUserInfoSession(session);
-		FileInfoQuery infoQuery = new FileInfoQuery();
-		infoQuery.setFilePid(filePid);
+	public ResponseVO loadAllFolder(HttpSession session, @VerifyParam(required = true) String filePid, String currentFileIds) {
+		FileInfoQuery query = new FileInfoQuery();
+		query.setUserId(getUserInfoSession(session).getUserId());
+		query.setFilePid(filePid);
+		query.setFolderType(FileFolderTypeEnums.FOLDER.getType());
 		if (!StringTools.isEmpty(currentFileIds)) {
-			infoQuery.setExcludeFileIdArray(currentFileIds.split(","));
+			query.setExcludeFileIdArray(currentFileIds.split(","));
 		}
-		infoQuery.setFolderType(FileFolderTypeEnums.FOLDER.getType());
-		infoQuery.setDelFlag(FileDelFlagEnums.USING.getFlag());
-		infoQuery.setOrderBy("create_time desc");
-		List<FileInfo> fileInfoList = fileInfoService.findListByParam(infoQuery);
+		query.setDelFlag(FileDelFlagEnums.USING.getFlag());
+		query.setOrderBy("create_time desc");
+		List<FileInfo> fileInfoList = fileInfoService.findListByParam(query);
 		return getSuccessResponseVO(CopyTools.copyList(fileInfoList, FileInfoVO.class));
 	}
 	
