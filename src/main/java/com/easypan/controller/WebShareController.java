@@ -247,5 +247,29 @@ public class WebShareController extends  CommonFileController{
 						 @PathVariable("code") @VerifyParam(required = true) String code) throws Exception {
 		super.download(request, response, code);
 	}
+	
+	/**
+	 * 保存分享
+	 *
+	 * @param session
+	 * @param shareId
+	 * @param shareFileIds
+	 * @param myFolderId
+	 * @return
+	 */
+	@RequestMapping("/saveShare")
+	@GlobalInterceptor(checkParams = true)
+	public ResponseVO saveShare(HttpSession session,
+								@VerifyParam(required = true) String shareId,
+								@VerifyParam(required = true) String shareFileIds,
+								@VerifyParam(required = true) String myFolderId) {
+		SessionShareDto shareSessionDto = checkShare(session, shareId);
+		SessionWebUserDto webUserDto = getUserInfoSession(session);
+		if (shareSessionDto.getShareUserId().equals(webUserDto.getUserId())) {
+			throw new BusinessException("自己分享的文件无法保存到自己的网盘");
+		}
+		fileInfoService.saveShare(shareSessionDto.getFileId(), shareFileIds, myFolderId, shareSessionDto.getShareUserId(), webUserDto.getUserId());
+		return getSuccessResponseVO(null);
+	}
 
 }

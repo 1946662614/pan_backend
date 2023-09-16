@@ -150,4 +150,15 @@ public interface FileInfoService {
      * @param fileid      fileid
      */
     void checkRootFilePid(String rootFilePid, String shareUserId, String fileid);
+    
+    /**
+     * 保存分享文件
+     *
+     * @param shareIds          共享id
+     * @param shareRootFilePid 共享根文件pid
+     * @param myFolderId       我文件夹id
+     * @param shareUserId      共享用户id
+     * @param currentUserId    当前用户id
+     */
+    void saveShare(String shareIds,String shareRootFilePid, String myFolderId, String shareUserId, String currentUserId);
 }
