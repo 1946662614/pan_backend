@@ -547,6 +547,46 @@ public class FileInfoServiceImpl implements FileInfoService {
 		this.fileInfoMapper.deleteFileByUserId(userId);
 	}
 	
+	
+	/**
+	 * 检查根文件pid
+	 *
+	 * @param rootFilePId 根文件pid
+	 * @param shareUserId 共享用户id
+	 * @param fileid      fileid
+	 */
+	@Override
+	public void checkRootFilePid(String rootFilePId, String shareUserId, String fileid) {
+		if (StringTools.isEmpty(fileid)){
+			throw new BusinessException(ResponseCodeEnum.CODE_600);
+		}
+		if (rootFilePId.equals(fileid)) {
+			return;
+		}
+		checkFilePid(rootFilePId,fileid,shareUserId);
+	}
+	
+	/**
+	 * 检查文件pid
+	 *
+	 * @param rootFilePid 根文件pid
+	 * @param fileId      文件id
+	 * @param userId      用户id
+	 */
+	private void checkFilePid(String rootFilePid, String fileId, String userId) {
+		FileInfo fileInfo = this.fileInfoMapper.selectByFileIdAndUserId(fileId, userId);
+		if (fileInfo == null) {
+			throw new BusinessException(ResponseCodeEnum.CODE_600);
+		}
+		if (Constants.ZERO_STR.equals(fileInfo.getFilePid())) {
+			throw new BusinessException(ResponseCodeEnum.CODE_600);
+		}
+		if (fileInfo.getFilePid().equals(rootFilePid)) {
+			return;
+		}
+		checkFilePid(rootFilePid, fileInfo.getFilePid(), userId);
+	}
+	
 	/**
 	 * 递归查找所有子文件夹文件列表
 	 *

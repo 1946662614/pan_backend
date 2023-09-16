@@ -140,4 +140,14 @@ public interface FileInfoService {
     void delFileBatch(String userId, String  fileIds,  Boolean adminOp);
     
     void deleteFileByUserId(String userId);
+    
+    
+    /**
+     * 检查根文件pid
+     *
+     * @param rootFilePid 根文件pid
+     * @param shareUserId 共享用户id
+     * @param fileid      fileid
+     */
+    void checkRootFilePid(String rootFilePid, String shareUserId, String fileid);
 }

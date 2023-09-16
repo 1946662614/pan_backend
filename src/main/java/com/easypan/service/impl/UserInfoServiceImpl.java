@@ -76,6 +76,14 @@ public class UserInfoServiceImpl implements UserInfoService {
 	}
 	
 	/**
+	 * 根据UserId获取对象
+	 */
+	@Override
+	public UserInfo getUserInfoByUserId(String userId) {
+		return this.userInfoMapper.selectByUserId(userId);
+	}
+	
+	/**
 	 * 根据条件查询列表
 	 */
 	@Override

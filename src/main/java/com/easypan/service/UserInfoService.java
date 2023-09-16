@@ -31,6 +31,10 @@ public interface UserInfoService {
 	 * 分页查询
 	 */
 	PaginationResultVO<UserInfo> findListByPage(UserInfoQuery param);
+	/**
+	 * 根据UserId查询对象
+	 */
+	UserInfo getUserInfoByUserId(String userId);
 	
 	/**
 	 * 根据UserId修改

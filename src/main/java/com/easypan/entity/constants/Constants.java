@@ -16,6 +16,7 @@ public class Constants {
 	public static final String ZERO_STR = "0";
 	public static final String VIEW_OBJ_RESULT_KEY = "result";
 	public static final String SESSION_KEY = "session_key";
+	public static final String SESSION_SHARE_KEY = "session_share_key_";
 	public static final Integer REDIS_KEY_EXPIRES_ONE_MIN = 60;
 	public static final Integer REDIS_KEY_EXPIRES_ONE_HOUR = REDIS_KEY_EXPIRES_ONE_MIN * 60;
 	public static final Long REDIS_KEY_EXPIRES_DAY = REDIS_KEY_EXPIRES_ONE_MIN * 60 * 24L;
@@ -32,7 +33,6 @@ public class Constants {
 	public static final String FILE_FOLDER_TEMP = "temp/";
 	public static final String AVATAR_DEFAULT = "default.jpg";
 	
-	public static final String SESSION_SHARE_KEY = "session_share_key_";
 	public static final Long MB = 1024 * 1024L;
 	public static final String TS_NAME = "index.ts";
 	public static final String M3U8_NAME = "index.m3u8";

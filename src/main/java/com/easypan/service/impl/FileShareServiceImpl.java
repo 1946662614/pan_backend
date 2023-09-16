@@ -1,6 +1,7 @@
 package com.easypan.service.impl;
 
 import com.easypan.entity.constants.Constants;
+import com.easypan.entity.dto.SessionShareDto;
 import com.easypan.entity.enums.PageSize;
 import com.easypan.entity.enums.ResponseCodeEnum;
 import com.easypan.entity.enums.ShareValidTypeEnums;
@@ -152,6 +153,32 @@ public class FileShareServiceImpl implements FileShareService {
         if (count != shareIdArray.length) {
             throw new BusinessException(ResponseCodeEnum.CODE_600);
         }
+    }
+    
+    /**
+     * 检查共享代码
+     *
+     * @param shareId 共享id
+     * @param code    密码
+     * @return {@link SessionShareDto}
+     */
+    @Override
+    public SessionShareDto checkShareCode(String shareId, String code) {
+        FileShare share = this.fileShareMapper.selectByShareId(shareId);
+        if (null == share || (share.getExpireTime() != null && new Date().after(share.getExpireTime()))) {
+            throw new BusinessException(ResponseCodeEnum.CODE_902.getMsg());
+        }
+        if (!share.getCode().equals(code)) {
+            throw new BusinessException("提取码错误");
+        }
+        // 更新浏览次数
+        this.fileShareMapper.updateShareShowCount(shareId);
+        SessionShareDto sessionShareDto = new SessionShareDto();
+        sessionShareDto.setShareUserId(shareId);
+        sessionShareDto.setFileId(share.getFileId());
+        sessionShareDto.setExpireTime(share.getExpireTime());
+        sessionShareDto.setShareUserId(share.getUserId());
+        return sessionShareDto;
     }
     
     
