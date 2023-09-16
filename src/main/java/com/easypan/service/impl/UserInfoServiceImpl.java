@@ -26,13 +26,10 @@ import com.easypan.utils.StringTools;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.reflection.ArrayUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sun.text.normalizer.UnicodeSet;
 
 import javax.annotation.Resource;
-import javax.security.auth.login.AppConfigurationEntry;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Date;
