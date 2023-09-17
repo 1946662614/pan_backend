@@ -3,11 +3,6 @@
 基于 Java SpringBoot 开发的C端网盘项目。
 
 
-
-
-
-## 模板特点
-
 ### 主流框架 & 特性
 
 - Spring Boot 2.7.x（贼新）

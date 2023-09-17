@@ -166,7 +166,7 @@ public class FileInfoServiceImpl implements FileInfoService {
 	 * @return {@link UploadResultDto}
 	 */
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public UploadResultDto uploadFile(SessionWebUserDto webUserDto, String fileId, MultipartFile file, String fileName, String filePid, String fileMd5,
 									  Integer chunkIndex, Integer chunks) {
 		File tempFileFolder = null;
